@@ -34,5 +34,17 @@ public class Advert {
 	
 	@Column(name="broker")
 	private String broker;
+
+	public Advert(String title, String squareFootage, String address, String city,
+			String price, String floor, String broker) {
+		this.title = title;
+		this.squareFootage = squareFootage;
+		this.address = address;
+		this.city = city;
+		this.price = price;
+		this.floor = floor;
+		this.broker = broker;
+	}
+	
 	
 }
