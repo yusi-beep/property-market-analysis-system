@@ -13,7 +13,49 @@ public class ExtractDataforOneAdvert {
 		
 		WebDriver driver = new ChromeDriver();
 		
-		driver.get("https://www.imot.bg/pcgi/imot.cgi?act=5&adv=1b164131625036294&topmenu=5&f1=1&f2=1&f3=a14811880783654031&f5=1&f6=%C2%F1%E8%F7%EA%E8&f7=%C2%F1%E8%F7%EA%E8&f8=2&f9=1");
+		String urlImotBg =  "https://www.imot.bg/pcgi/imot.cgi?act=5&adv=1b164382325993161";
+		
+		//extractDataFromImotBG(driver, urlImotBg);
+		
+		System.out.println("<---------------------------->");
+		
+		String urlHomesBg = "https://www.homes.bg/offer/apartament-za-prodazhba/tristaen-89m2-sofiya-zhk.-ljulin-6/as1370158";
+		
+		extractDataFromHomesBg(driver, urlHomesBg);
+	}
+	
+	private static void extractDataFromHomesBg(WebDriver driver, String urlHomesBg) throws InterruptedException {
+
+		driver.get(urlHomesBg);
+		Thread.sleep(200);
+		
+		String title = driver.findElement(By
+				.className("section-title"))
+				.getText();
+		
+		String price = driver.findElement(By
+				.xpath("/html/body/div/div/div[2]/div[2]/div/div/div/div/div/div[2]/div[2]/table/tbody/tr/td[2]/table/tbody/tr[1]/td"))
+				.getText();
+		
+		String floor = driver.findElement(By
+				.xpath("/html/body/div/div/div[2]/div[2]/div/div/div/div/div/div[2]/div[2]/div[1]/div/div[2]/span/h3"))
+				.getText();
+		
+		String address = driver.findElement(By
+				.xpath("/html/body/div[1]/div/div[2]/div[2]/div/div/div/div/div/div[2]/div[2]/table/tbody/tr/td[1]"))
+				.getText();
+		
+		String broker = driver.findElement(By
+				.xpath("/html/body/div[1]/div/div[2]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[2]/td/div[1]"))
+				.getText();
+		
+		
+		System.out.println(title+ "\n" + address + "\n" + price + "\n" + floor + "\n" + broker);
+	}
+
+	public static void extractDataFromImotBG(WebDriver driver, String url ) throws InterruptedException {
+		
+		driver.get(url);
 		Thread.sleep(200);
 		
 		driver.findElement(By.className("fc-button-label")).click();
@@ -31,10 +73,6 @@ public class ExtractDataforOneAdvert {
 				.id("cena"))
 				.getText();
 		
-		String date = driver.findElement(By
-				.xpath("/html/body/div[2]/table/tbody/tr[1]/td[1]/form[2]/div[2]/div[3]"))
-				.getText();
-		
 		String squareFootage = driver.findElement(By
 				.xpath("/html/body/div[2]/table/tbody/tr[1]/td[1]/form[2]/div[2]/ul/li[2]"))
 				.getText();
@@ -42,13 +80,10 @@ public class ExtractDataforOneAdvert {
 				.xpath("/html/body/div[2]/table/tbody/tr[1]/td[1]/form[2]/div[2]/ul/li[4]"))
 				.getText();
 		
-		if (offer != "") {
-			
-			System.out.printf("%s%n%s%n%s%n%s%n%s%n%s%n", offer, place, price, date, squareFootage, floor);
+		String broker = driver.findElement(By
+				.xpath("/html/body/div[2]/table/tbody/tr[1]/td[2]/div[1]/div/div/a[2]"))
+				.getText();
 		
-		} else {
-			
-			System.out.println("Not found");
-		}
+			System.out.printf("%s%n %s%n %s%n %s%n %s%n %s%n", offer, place, price, squareFootage, floor, broker);
 	}
 }
