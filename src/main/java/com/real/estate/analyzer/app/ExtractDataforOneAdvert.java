@@ -6,7 +6,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class ExtractDataforOneAdvert {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args)throws InterruptedException {
 
 		System.setProperty("webdriver.chrome.driver", 
 				"C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");
@@ -15,7 +15,7 @@ public class ExtractDataforOneAdvert {
 		
 		String urlImotBg =  "https://www.imot.bg/pcgi/imot.cgi?act=5&adv=1b164382325993161";
 		
-		extractDataFromImotBG(driver, urlImotBg);
+		//extractDataFromImotBg(driver, urlImotBg);
 		
 		System.out.println("<---------------------------->");
 		
@@ -23,7 +23,9 @@ public class ExtractDataforOneAdvert {
 				+ "tristaen-89m2-sofiya-zhk.-ljulin-6/as1370158";
 		
 		extractDataFromHomesBg(driver, urlHomesBg);
-	}
+		
+		//driver.close();
+		}
 	
 	private static void extractDataFromHomesBg(
 			WebDriver driver, String urlHomesBg) throws InterruptedException {
@@ -49,14 +51,15 @@ public class ExtractDataforOneAdvert {
 				.xpath("/html/body/div/div/div[2]/div[2]/div/div/div/div/div/"
 						+ "div[2]/div[2]/table/tbody/tr/td[2]/table/tbody/tr[1]/td"))
 				.getText();
+		
 		parts = splitStringAt(price, splitAt);
 		price = parts[0] + " " + parts[1];
-		
-		String floor = driver.findElement(By
+		 
+		 String floor = driver.findElement(By
 				.xpath("/html/body/div/div/div[2]/div[2]/div/div/div/div/div/"
 						+ "div[2]/div[2]/div[1]/div/div[2]/span/h3"))
 				.getText()
-				.substring(0,1);
+				.substring(0, 1);
 		
 		String address = driver.findElement(By
 				.xpath("/html/body/div[1]/div/div[2]/div[2]/div/div/div/div/div/"
@@ -77,17 +80,13 @@ public class ExtractDataforOneAdvert {
 		
 		
 		System.out.printf("%s%n%s%n %s%n %s%n %s%n %s%n %s%n %s%n",
-				"Homes.bg", title, address, squareFootage, city, price, floor, broker);
+				"Homes.bg", title, squareFootage, address, city, price, floor, broker);
 	}
 
-	public static void extractDataFromImotBG(
+	public static void extractDataFromImotBg(
 			WebDriver driver, String url ) throws InterruptedException {
 		
-		String[] parts;
-		
-		String splitAt = ",";
-		
-		int delay= 200;
+		int delay = 200;
 		
 		driver.get(url);
 		Thread.sleep(delay);
@@ -102,6 +101,10 @@ public class ExtractDataforOneAdvert {
 		String address = driver.findElement(By
 				.xpath("/html/body/div[2]/table/tbody/tr[1]/td[1]/form[2]/div[2]/span[1]"))
 				.getText();
+		
+		String[] parts;
+		
+		String splitAt = ",";
 		
 		parts = splitStringAt(address, splitAt);
 		
@@ -122,14 +125,14 @@ public class ExtractDataforOneAdvert {
 		String floor = driver.findElement(By
 				.xpath("/html/body/div[2]/table/tbody/tr[1]/td[1]/form[2]/div[2]/ul/li[4]"))
 				.getText()
-				.substring(0,1);
+				.substring(0, 1);
 		
 		String broker = driver.findElement(By
 				.xpath("/html/body/div[2]/table/tbody/tr[1]/td[2]/div[1]/div/div/a[2]"))
 				.getText();
 		
 			System.out.printf("%s%n%s%n %s%n %s%n %s%n %s%n %s%n %s%n",
-					"Imot.bg", title, address, city, price, squareFootage, floor, broker);
+					"Imot.bg", title, squareFootage, address, city, price, floor, broker);
 	}
 	
 	public static String[] splitStringAt(String str, String splitAt) {
