@@ -8,8 +8,8 @@ public class TestJdbs {
 	public static void main(String[] args) {
 
 		String jdbcUrl = "jdbc:mysql://localhost:3306/property-market-analyzer?useSSL=false&serverTimezone=UTC";
-		String user = "joyusufov";
-		String pass = "joyusufov";
+		String user = "root";
+		String pass = "samoLevski";
 		
 		try {
 			System.out.println("Connecting to database: " + jdbcUrl);
