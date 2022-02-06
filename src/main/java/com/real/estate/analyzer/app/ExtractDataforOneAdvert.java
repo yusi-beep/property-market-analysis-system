@@ -19,8 +19,8 @@ public class ExtractDataforOneAdvert {
 		
 		System.out.println("<---------------------------->");
 		
-		String urlHomesBg = "https://www.homes.bg/offer/apartament-za-prodazhba/"
-				+ "tristaen-89m2-sofiya-zhk.-ljulin-6/as1370158";
+		String urlHomesBg = "https://www.homes.bg/offer/apartament-za-prodazhba/dvustaen-47m2-sofiya-zhk.-nadezhda-1/as1390063";
+		//String urlHomesBg = "https://www.homes.bg/offer/apartament-za-prodazhba/dvustaen-73m2-sofiya---grad-sofiya/as1390044";
 		
 		extractDataFromHomesBg(driver, urlHomesBg);
 		
@@ -73,10 +73,9 @@ public class ExtractDataforOneAdvert {
 		String city = parts[1]
 				.trim();
 		
-		String broker = driver.findElement(By
-				.xpath("/html/body/div[1]/div/div[2]/div[2]/div/div/div/div/div/"
-						+ "div[2]/div[2]/div[2]/div[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[2]/td/div[1]"))
-				.getText();
+		String broker =""/* driver.findElement(By
+				.xpath("/html/body/div/div/div[2]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[2]/td/div[1]/b"))
+				.getText()*/;
 		
 		
 		System.out.printf("%s%n%s%n %s%n %s%n %s%n %s%n %s%n %s%n",
