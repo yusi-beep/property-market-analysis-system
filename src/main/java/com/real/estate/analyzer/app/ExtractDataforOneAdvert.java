@@ -72,7 +72,8 @@ public class ExtractDataforOneAdvert {
 				.trim();
 		
 		String broker = driver.findElement(By
-				.xpath("/html/body/div/div/div[2]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[2]/td/div[1]/b"))
+				.xpath("/html/body/div/div/div[2]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[2]/table/"
+						+ "tbody/tr[1]/td[2]/table/tbody/tr[2]/td/div[1]/b"))
 				.getText();
 		
 		System.out.printf("%s%n%s%n %s%n %s%n %s%n %s%n %s%n %s%n",
