@@ -13,14 +13,14 @@ public class ExtractDataforOneAdvert {
 		
 		WebDriver driver = new ChromeDriver();
 		
-		String urlImotBg =  "https://www.imot.bg/pcgi/imot.cgi?act=5&adv=1b164382325993161";
+		String urlImotBg = "https://www.imot.bg/pcgi/imot.cgi?act=5&adv=1b164382325993161";
 		
-		//extractDataFromImotBg(driver, urlImotBg);
+		extractDataFromImotBg(driver, urlImotBg);
 		
 		System.out.println("<---------------------------->");
 		
-		String urlHomesBg = "https://www.homes.bg/offer/apartament-za-prodazhba/dvustaen-47m2-sofiya-zhk.-nadezhda-1/as1390063";
-		//String urlHomesBg = "https://www.homes.bg/offer/apartament-za-prodazhba/dvustaen-73m2-sofiya---grad-sofiya/as1390044";
+		String urlHomesBg = "https://www.homes.bg/offer/apartament-za-prodazhba/tristaen-89m2-sofiya-zhk.-ljulin-6/"
+				+ "as1370158https://www.homes.bg/offer/apartament-za-prodazhba/tristaen-89m2-sofiya-zhk.-ljulin-6/as1370158";
 		
 		extractDataFromHomesBg(driver, urlHomesBg);
 		
@@ -47,9 +47,7 @@ public class ExtractDataforOneAdvert {
 		
 		String squareFootage = parts[1].trim();
 		
-		String price = driver.findElement(By
-				.xpath("/html/body/div/div/div[2]/div[2]/div/div/div/div/div/"
-						+ "div[2]/div[2]/table/tbody/tr/td[2]/table/tbody/tr[1]/td"))
+		String price = driver.findElement(By.className("ver20black"))
 				.getText();
 		
 		parts = splitStringAt(price, splitAt);
@@ -73,10 +71,9 @@ public class ExtractDataforOneAdvert {
 		String city = parts[1]
 				.trim();
 		
-		String broker =""/* driver.findElement(By
+		String broker = driver.findElement(By
 				.xpath("/html/body/div/div/div[2]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[2]/td/div[1]/b"))
-				.getText()*/;
-		
+				.getText();
 		
 		System.out.printf("%s%n%s%n %s%n %s%n %s%n %s%n %s%n %s%n",
 				"Homes.bg", title, squareFootage, address, city, price, floor, broker);
