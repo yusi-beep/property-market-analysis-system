@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import com.real.estate.analizer.dtos.Extract;
+import com.real.estate.analizer.dtos.HomesBg;
 import com.real.estate.analizer.dtos.ImotBg;
 
 public class MultipleExtraction {
@@ -16,6 +17,20 @@ public class MultipleExtraction {
 				"C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");
 		
 		WebDriver driver = new ChromeDriver();
+		
+		Extract extractHomesBg = new HomesBg();
+		
+		driver.get(extractHomesBg.getWorkPageUrl(driver));
+		
+		ArrayList<String> urlHomesBg = (ArrayList<String>) extractHomesBg.urlArray(driver);
+		
+		for(String url : urlHomesBg) {
+			
+			extractHomesBg.extractData(driver, url);
+			Thread.sleep(200);
+		}
+		
+		System.out.println("<---------------------------->");
 		
 		Extract extractImotBg = new ImotBg();
 		
