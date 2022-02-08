@@ -8,7 +8,7 @@ import org.openqa.selenium.WebDriver;
 
 import com.real.estate.analyzer.entity.Advert;
 
-public class ImotBg implements Extract{
+public class ImotBg implements Extract {
 
 	@Override
 	public Advert extractData(WebDriver driver, String url) throws InterruptedException {
@@ -83,7 +83,7 @@ public class ImotBg implements Extract{
 		
 		for (int i = 0; i < lastPageIndex; i++) {
 			
-			for (int j = beginTableIndex; j < contentCount; j++){
+			for (int j = beginTableIndex; j < contentCount; j++) {
 				
 				String url = driver
 						.findElement(By.xpath("//table[" + j + "]//a"))

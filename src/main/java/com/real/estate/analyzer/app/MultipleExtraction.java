@@ -24,7 +24,7 @@ public class MultipleExtraction {
 		
 		ArrayList<String> urlHomesBg = (ArrayList<String>) extractHomesBg.urlArray(driver);
 		
-		for(String url : urlHomesBg) {
+		for (String url : urlHomesBg) {
 			
 			extractHomesBg.extractData(driver, url);
 			Thread.sleep(200);
@@ -38,7 +38,7 @@ public class MultipleExtraction {
 		
 		ArrayList<String> urlImotBg = (ArrayList<String>) extractImotBg.urlArray(driver);
 		
-		for(String url : urlImotBg) {
+		for (String url : urlImotBg) {
 			
 			extractImotBg.extractData(driver, url);
 		}

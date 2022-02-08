@@ -1,5 +1,7 @@
 package com.real.estate.analyzer.app;
 
+import java.util.ArrayList;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -11,11 +13,9 @@ import com.real.estate.analizer.dtos.HomesBg;
 import com.real.estate.analizer.dtos.ImotBg;
 import com.real.estate.analyzer.entity.Advert;
 
-public class WriteDataforAdvertonDb {
+public class MultipleAdvertWriter {
 
-	public static void main(String[] args)throws InterruptedException {
-
-		
+	public static void main(String[] args) throws InterruptedException {
 		SessionFactory factory = new Configuration()
 				.configure("hibernate.cfg.xml")
 				.addAnnotatedClass(Advert.class)
@@ -29,11 +29,6 @@ public class WriteDataforAdvertonDb {
 		
 		WebDriver driver = new ChromeDriver();
 		
-		String urlImotBg = "https://www.imot.bg/pcgi/imot.cgi?act=5&adv=1a164388122478136&slink=7ng5u5&f1=1";
-		
-		String urlHomesBg = "https://www.homes.bg/offer/apartament-za-prodazhba/tristaen-89m2-sofiya-zhk.-ljulin-6/"
-				+ "as1370158https://www.homes.bg/offer/apartament-za-prodazhba/tristaen-89m2-sofiya-zhk.-ljulin-6/as1370158";
-		
 			try {
 				
 				Advert tempAdvert; 
@@ -41,20 +36,36 @@ public class WriteDataforAdvertonDb {
 				//start a transaction
 				session.beginTransaction();
 				
-				Extract extractImotBg = new ImotBg();
-				tempAdvert =  extractImotBg.extractData(driver, urlImotBg);
+				Extract extractHomesBg = new HomesBg();
+				
+				driver.get(extractHomesBg.getWorkPageUrl(driver));
+				
+				ArrayList<String> urlHomesBg = (ArrayList<String>) extractHomesBg.urlArray(driver);
+				
+				for (String url : urlHomesBg) {
+					
+				tempAdvert =  extractHomesBg.extractData(driver, url);
 				
 				System.out.println("Saving advert: " + tempAdvert);
 				session.save(tempAdvert);
+				}
 				
 				System.out.println("<---------------------------->");
 				
-				Extract extractHomesBg = new HomesBg();
-				tempAdvert = extractHomesBg.extractData(driver, urlHomesBg);	
+				Extract extractImotBg = new ImotBg();
 				
-				System.out.println("Saving second advert: " + tempAdvert);
-				session.save(tempAdvert); 
+				driver.get(extractImotBg.getWorkPageUrl(driver));
 				
+				ArrayList<String> urlImotBg = (ArrayList<String>) extractImotBg.urlArray(driver);
+				
+				for (String url : urlImotBg) {
+					
+					tempAdvert =  extractImotBg.extractData(driver, url);
+					
+					System.out.println("Saving advert: " + tempAdvert);
+					session.save(tempAdvert);
+					
+				}
 				//commit transactions
 				session.getTransaction().commit();
 			
@@ -64,5 +75,14 @@ public class WriteDataforAdvertonDb {
 			factory.close();
 			driver.close();
 			}
-		}
+	}
+
 }
+
+
+
+
+
+
+
+

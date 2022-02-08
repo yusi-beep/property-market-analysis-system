@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
 
 import com.real.estate.analyzer.entity.Advert;
 
-public class HomesBg implements Extract{
+public class HomesBg implements Extract {
 	
 	@Override
 	public Advert extractData(WebDriver driver, String urlHomesBg) throws InterruptedException {
@@ -106,6 +106,7 @@ public class HomesBg implements Extract{
 			urlArray.add(url.getAttribute("href"));
 			
 			JavascriptExecutor jse = (JavascriptExecutor) driver;
+			
 	        jse.executeScript("arguments[0].scrollIntoView();", url );
 	        Thread.sleep(200);
 	        
