@@ -6,9 +6,9 @@ import org.hibernate.cfg.Configuration;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import com.real.estate.analizer.dtos.Extract;
-import com.real.estate.analizer.dtos.HomesBg;
-import com.real.estate.analizer.dtos.ImotBg;
+import com.real.estate.analyzer.connectors.Connector;
+import com.real.estate.analyzer.connectors.HomesBgConnector;
+import com.real.estate.analyzer.connectors.ImotBgConnector;
 import com.real.estate.analyzer.entity.Advert;
 
 public class WriteDataforAdvertonDb {
@@ -41,7 +41,7 @@ public class WriteDataforAdvertonDb {
 				//start a transaction
 				session.beginTransaction();
 				
-				Extract extractImotBg = new ImotBg();
+				Connector extractImotBg = new ImotBgConnector();
 				tempAdvert =  extractImotBg.extractData(driver, urlImotBg);
 				
 				System.out.println("Saving advert: " + tempAdvert);
@@ -49,7 +49,7 @@ public class WriteDataforAdvertonDb {
 				
 				System.out.println("<---------------------------->");
 				
-				Extract extractHomesBg = new HomesBg();
+				Connector extractHomesBg = new HomesBgConnector();
 				tempAdvert = extractHomesBg.extractData(driver, urlHomesBg);	
 				
 				System.out.println("Saving second advert: " + tempAdvert);

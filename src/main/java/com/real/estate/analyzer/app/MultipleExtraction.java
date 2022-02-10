@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import com.real.estate.analizer.dtos.Extract;
-import com.real.estate.analizer.dtos.HomesBg;
-import com.real.estate.analizer.dtos.ImotBg;
+import com.real.estate.analyzer.connectors.Connector;
+import com.real.estate.analyzer.connectors.HomesBgConnector;
+import com.real.estate.analyzer.connectors.ImotBgConnector;
 
 public class MultipleExtraction {
 
@@ -18,7 +18,7 @@ public class MultipleExtraction {
 		
 		WebDriver driver = new ChromeDriver();
 		
-		Extract extractHomesBg = new HomesBg();
+		Connector extractHomesBg = new HomesBgConnector();
 		
 		driver.get(extractHomesBg.getWorkPageUrl(driver));
 		
@@ -32,7 +32,7 @@ public class MultipleExtraction {
 		
 		System.out.println("<---------------------------->");
 		
-		Extract extractImotBg = new ImotBg();
+		Connector extractImotBg = new ImotBgConnector();
 		
 		driver.get(extractImotBg.getWorkPageUrl(driver));
 		

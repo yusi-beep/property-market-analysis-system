@@ -8,9 +8,9 @@ import org.hibernate.cfg.Configuration;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import com.real.estate.analizer.dtos.Extract;
-import com.real.estate.analizer.dtos.HomesBg;
-import com.real.estate.analizer.dtos.ImotBg;
+import com.real.estate.analyzer.connectors.Connector;
+import com.real.estate.analyzer.connectors.HomesBgConnector;
+import com.real.estate.analyzer.connectors.ImotBgConnector;
 import com.real.estate.analyzer.entity.Advert;
 
 public class MultipleAdvertWriter {
@@ -36,7 +36,7 @@ public class MultipleAdvertWriter {
 				//start a transaction
 				session.beginTransaction();
 				
-				Extract extractHomesBg = new HomesBg();
+				Connector extractHomesBg = new HomesBgConnector();
 				
 				driver.get(extractHomesBg.getWorkPageUrl(driver));
 				
@@ -52,7 +52,7 @@ public class MultipleAdvertWriter {
 				
 				System.out.println("<---------------------------->");
 				
-				Extract extractImotBg = new ImotBg();
+				Connector extractImotBg = new ImotBgConnector();
 				
 				driver.get(extractImotBg.getWorkPageUrl(driver));
 				
