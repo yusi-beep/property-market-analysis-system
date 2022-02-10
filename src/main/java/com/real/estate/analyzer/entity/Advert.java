@@ -11,28 +11,28 @@ public class Advert {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column
 	private int id;
 	
-	@Column(name="title")
+	@Column
 	private String title;
 	
-	@Column(name="square_footage")
+	@Column
 	private String squareFootage;
 	
-	@Column(name="address")
+	@Column
 	private String address;
 	
-	@Column(name="city")
+	@Column
 	private String city;
 	
-	@Column(name="price")
+	@Column
 	private String price;
 	
-	@Column(name="floor")
+	@Column
 	private String floor;
 	
-	@Column(name="broker")
+	@Column
 	private String broker;
 
 	public Advert(String title, String squareFootage, String address, String city,
