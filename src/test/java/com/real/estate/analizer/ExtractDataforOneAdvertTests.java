@@ -5,8 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.real.estate.analizer.dtos.Extract;
-import com.real.estate.analizer.dtos.ImotBg;
+import com.real.estate.analyzer.connectors.Connector;
+import com.real.estate.analyzer.connectors.ImotBgConnector;
 
 @SpringBootTest
 public class ExtractDataforOneAdvertTests {
@@ -20,7 +20,7 @@ public class ExtractDataforOneAdvertTests {
 		
 		driver = new ChromeDriver();
 		
-		Extract extractImotBg = new ImotBg();
+		Connector extractImotBg = new ImotBgConnector();
 		
 		driver.manage().window().maximize();
 		driver.get(extractImotBg.getWorkPageUrl(driver));
