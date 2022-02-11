@@ -1,5 +1,6 @@
 package com.real.estate.analyzer.connectors;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,60 +8,61 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import com.real.estate.analyzer.entity.Advert;
+import com.real.estate.analyzer.utils.Utils;
 
 public class ImotBgConnector implements Connector {
 
 	private final String COMMA_SEPARATOR = ",";
 	
+	private final String TITLE_XPATH = "//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//strong";
 	
+	private final String PRICE_XPATH = "//span[@id='cena']|//td[@class='valgtop']//span";
+	
+	private final String FLOOR_XPATH = "//ul[@class='imotData']//li[4]";
+	
+	private final String SQUARE_FOOTAGE = "//ul[@class='imotData']//li[2]";
+	
+	private final String FULL_ADDRESS_XPATH = "//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//span[1]";
+	
+	private final String BROKER_XPATH = "//a[@class='name']";
+
 	@Override
-	public Advert extractData(WebDriver driver, String url) throws InterruptedException {
+	public Advert extractData(WebDriver driver, String url)  {
 		
 		int delay = 200;
 		
 		driver.get(url);
 	
-		Thread.sleep(delay);
+		Utils.sleep(delay);
 		
-		String title = driver.findElement(By
-				.xpath("//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//strong"))
-				.getText();
+		String title = Connector.checkXpathContains(driver, TITLE_XPATH);
 		
-		String address = driver.findElement(By
-				.xpath("//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//span[1]"))
-				.getText();
+		String fullAddress = Connector.checkXpathContains(driver, FULL_ADDRESS_XPATH);
 		
 		String[] parts;
 		
-		parts = address.split(COMMA_SEPARATOR);
+		parts = fullAddress.split(COMMA_SEPARATOR);
 		
-		address = parts[1]
+		String address = parts[1]
 				.trim();
 		
 		String city = parts[0]
 				.substring(5);
 		
-		String price = driver.findElement(By
-				.xpath("//span[@id='cena']|//td[@class='valgtop']//span"))
-				.getText();
+		String price = Connector.checkXpathContains(driver, PRICE_XPATH);
 		
-		String squareFootage = driver.findElement(By
-				.xpath("//ul[@class='imotData']//li[2]"))
-				.getText();
+		String squareFootage = Connector.checkXpathContains(driver, SQUARE_FOOTAGE);
 		
-		String floor = driver.findElement(By
-				.xpath("//ul[@class='imotData']//li[4]"))
-				.getText()
-				.substring(0, 2)
-				.trim();
+		String floor = Connector.checkXpathContains(driver, FLOOR_XPATH).substring(0, 2).trim();
 		
-		String broker = driver.findElement(By
-				.xpath("//a[@class='name']|//div[@class='AG']//strong"))
-				.getText();
+		String broker = Connector.checkXpathContains(driver, BROKER_XPATH);
 		
-			Advert tempAdvert = new Advert(
-					title, squareFootage, address, city, price, floor, broker);
+		LocalDateTime dateTime = LocalDateTime.now();
 		
+		
+		Advert tempAdvert = new Advert(title, squareFootage,
+				price, floor, address, city, broker, url, dateTime);
+			
 			System.out.println(tempAdvert);
 			
 			return tempAdvert;
@@ -94,22 +96,4 @@ public class ImotBgConnector implements Connector {
 		
 		return urlArray;
 	}
-
-	@Override
-	public String getWorkPageUrl(WebDriver driver) throws InterruptedException {
-		
-		int delay = 100;
-		
-		driver.manage().window().maximize();
-		
-		driver.get("https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7o0gd5&f1=1");
-		
-		driver.findElement(By.className("fc-button-label")).click();
-		Thread.sleep(delay);
-		
-		String url = driver.getCurrentUrl();
-		
-		return url;
-	}
-
 }
