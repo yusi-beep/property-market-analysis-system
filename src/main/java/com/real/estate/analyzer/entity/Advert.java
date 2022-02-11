@@ -1,12 +1,13 @@
 package com.real.estate.analyzer.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
 
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name="advert")
 public class Advert {
 
 	@Id
@@ -35,8 +36,14 @@ public class Advert {
 	@Column
 	private String broker;
 
-	public Advert(String title, String squareFootage, String address, String city,
-			String price, String floor, String broker) {
+	@Column
+	private String url;
+	
+	@Column
+	private LocalDateTime data;
+
+	public Advert(String title, String squareFootage, String address, String city, String price, String floor,
+			String broker, String url, LocalDateTime data) {
 		this.title = title;
 		this.squareFootage = squareFootage;
 		this.address = address;
@@ -44,6 +51,8 @@ public class Advert {
 		this.price = price;
 		this.floor = floor;
 		this.broker = broker;
+		this.url = url;
+		this.data = data;
 	}
 	
 	
