@@ -1,6 +1,7 @@
 package com.real.estate.analyzer;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +10,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.real.estate.analyzer.connectors.Connector;
+import com.real.estate.analyzer.connectors.HomesBgConnector;
+import com.real.estate.analyzer.connectors.ImotBgConnector;
 import com.real.estate.analyzer.entity.Advert;
-import com.real.estate.analyzer.jpa.AdvertRepository;
+import com.real.estate.analyzer.repository.AdvertRepository;
 import com.real.estate.analyzer.utils.Utils;
 
 @SpringBootApplication
@@ -21,17 +25,18 @@ public class PropertyMarketAnalyzerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PropertyMarketAnalyzerApplication.class, args);
 		
+		Connector connector = new HomesBgConnector();
 		
-		Utils.extractAdvertsHomesBg();
+		connector.extractAdverts();
 
-		Utils.extractAdvertsImotBg();
-		
+		connector = new ImotBgConnector();
+		connector.extractAdverts();		
 	}
 
 	private LocalDateTime dateTime;
-
+	
 	@Bean
-	public CommandLineRunner demo(AdvertRepository repository) {
+	public CommandLineRunner testing(AdvertRepository repository) {
 		return (args) -> {
 			repository.save(new Advert("title", "squareFootage", "price", "floor", "address", "city", "broker", "url", dateTime));
 		
@@ -44,7 +49,9 @@ public class PropertyMarketAnalyzerApplication {
 		      log.info("");
 		
 		      // fetch an individual Advert by ID
-		      Advert Advert = repository.findById(1L);
+		      Advert Advert = repository.findById(1L).orElseThrow(() ->
+              new NoSuchElementException("The advert with id: " + 1L + " is not found in the repository.")
+      );
 		      log.info("Advert found with findById(1L):");
 		      log.info("--------------------------------");
 		      log.info(Advert.toString());

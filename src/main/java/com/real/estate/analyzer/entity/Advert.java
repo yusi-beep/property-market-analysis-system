@@ -36,7 +36,7 @@ public class Advert {
 	@Column
 	private String broker;
 
-	@Column
+	@Column(unique=true)
 	private String url;
 	
 	@Column

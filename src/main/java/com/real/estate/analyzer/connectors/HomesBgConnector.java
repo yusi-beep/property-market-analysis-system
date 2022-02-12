@@ -25,13 +25,15 @@ public class HomesBgConnector implements Connector {
 	
 	private final String BROKER_XPATH = "//div[@class='contact-box']//div[1]/b";
 	
+	private WebDriver driver;
+	
 	@Override
-	public Advert extractData(WebDriver driver, String url) {
+	public Advert extractData(String url) {
 		
 		driver.get(url);
 		Utils.sleep(200);
 		
-		String fullTitle = Connector.checkXpathContains(driver, FULL_TITLE_XPATH);
+		String fullTitle = Utils.getTextByXpath(driver, FULL_TITLE_XPATH);
 		String[] parts;
 		parts = fullTitle.split(COMMA_SEPARATOR);
 		
@@ -39,19 +41,19 @@ public class HomesBgConnector implements Connector {
 		
 		String squareFootage = parts[1].trim();
 		
-		String price = Connector.checkXpathContains(driver, PRICE_XPATH);
+		String price = Utils.getTextByXpath(driver, PRICE_XPATH);
 		price.replace(',', ' ');
 		
-		String floor = Connector.checkXpathContains(driver, FLOOR_XPATH).substring(0, 2).trim();
+		String floor = Utils.getTextByXpaths(driver, FLOOR_XPATH).substring(0, 2).trim();
 		
-		String fullAddress = Connector.checkXpathContains(driver, FULL_ADDRESS_XPATH);
+		String fullAddress = Utils.getTextByXpath(driver, FULL_ADDRESS_XPATH);
 		parts = fullAddress.split(COMMA_SEPARATOR);
 		
 		String address = parts[0];
 		
 		String city = parts[1].trim();
 		
-		String broker = Connector.checkXpathContains(driver, BROKER_XPATH);
+		String broker = Utils.getTextByXpath(driver, BROKER_XPATH);
 		
 		LocalDateTime dateTime = LocalDateTime.now();
 
@@ -64,7 +66,7 @@ public class HomesBgConnector implements Connector {
 	}
 
 	@Override
-	public List<String> urlArray(WebDriver driver) {
+	public List<String> urlArray() {
 		
 		List<String> urlArray = new ArrayList<String>();
 		
@@ -95,7 +97,7 @@ public class HomesBgConnector implements Connector {
 			
 			urlArray.add(url.getAttribute("href"));
 		
-			Utils.scroll(url);
+			Utils.scroll(url, driver);
 	        Utils.sleep(200);
 	        
 	        System.out.println(i + "-->" + url.getAttribute("href"));
@@ -103,4 +105,20 @@ public class HomesBgConnector implements Connector {
 		
 		return urlArray;
 	}
+
+	@Override
+	public void extractAdverts() {
+		
+		//TODO
+		driver.get("https://www.homes.bg/");
+		
+		ArrayList<String> urlHomesBg = (ArrayList<String>) this.urlArray();
+		
+		for (String url : urlHomesBg) {
+			
+			this.extractData(url);
+			Utils.sleep(200);
+		}		
+	}
+
 }

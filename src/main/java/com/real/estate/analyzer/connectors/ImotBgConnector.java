@@ -25,9 +25,11 @@ public class ImotBgConnector implements Connector {
 	private final String FULL_ADDRESS_XPATH = "//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//span[1]";
 	
 	private final String BROKER_XPATH = "//a[@class='name']";
+	
+	private WebDriver driver;
 
 	@Override
-	public Advert extractData(WebDriver driver, String url)  {
+	public Advert extractData(String url)  {
 		
 		int delay = 200;
 		
@@ -35,9 +37,9 @@ public class ImotBgConnector implements Connector {
 	
 		Utils.sleep(delay);
 		
-		String title = Connector.checkXpathContains(driver, TITLE_XPATH);
+		String title = Utils.getTextByXpath(driver, TITLE_XPATH);
 		
-		String fullAddress = Connector.checkXpathContains(driver, FULL_ADDRESS_XPATH);
+		String fullAddress = Utils.getTextByXpath(driver, FULL_ADDRESS_XPATH);
 		
 		String[] parts;
 		
@@ -49,13 +51,13 @@ public class ImotBgConnector implements Connector {
 		String city = parts[0]
 				.substring(5);
 		
-		String price = Connector.checkXpathContains(driver, PRICE_XPATH);
+		String price = Utils.getTextByXpath(driver, PRICE_XPATH);
 		
-		String squareFootage = Connector.checkXpathContains(driver, SQUARE_FOOTAGE);
+		String squareFootage = Utils.getTextByXpath(driver, SQUARE_FOOTAGE);
 		
-		String floor = Connector.checkXpathContains(driver, FLOOR_XPATH).substring(0, 2).trim();
+		String floor = Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 2).trim();
 		
-		String broker = Connector.checkXpathContains(driver, BROKER_XPATH);
+		String broker = Utils.getTextByXpath(driver, BROKER_XPATH);
 		
 		LocalDateTime dateTime = LocalDateTime.now();
 		
@@ -69,7 +71,7 @@ public class ImotBgConnector implements Connector {
 	}
 
 	@Override
-	public List<String> urlArray(WebDriver driver) {
+	public List<String> urlArray() {
 		
 		List<String> urlArray = new ArrayList<String>();
 		
@@ -95,5 +97,11 @@ public class ImotBgConnector implements Connector {
 		}
 		
 		return urlArray;
+	}
+
+	@Override
+	public void extractAdverts() {
+		// TODO Auto-generated method stub
+		
 	}
 }
