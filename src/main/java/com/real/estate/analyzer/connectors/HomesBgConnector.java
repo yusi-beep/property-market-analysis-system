@@ -13,19 +13,23 @@ import com.real.estate.analyzer.utils.Utils;
 
 public class HomesBgConnector implements Connector {
 	
-	private final String COMMA_SEPARATOR = ",";
+	private static final String COMMA_SEPARATOR = ",";
 	
-	private final String FULL_TITLE_XPATH = "//div[@class='section-title']//h1";
+	private static final String FULL_TITLE_XPATH = "//div[@class='section-title']//h1";
 	
-	private final String PRICE_XPATH = "//span[@class='ver20black']";
+	private static final String PRICE_XPATH = "//span[@class='ver20black']";
 	
-	private final String FLOOR_XPATH = "//div[@class='Attributes']/div[2]/span/h3";
+	private static final String FLOOR_XPATH = "//div[@class='Attributes']/div[2]/span/h3";
 	
-	private final String FULL_ADDRESS_XPATH = "//div[@class='mdc-layout-grid__inner']//b//h2";
+	private static final String FULL_ADDRESS_XPATH = "//div[@class='mdc-layout-grid__inner']//b//h2";
 	
-	private final String BROKER_XPATH = "//div[@class='contact-box']//div[1]/b";
+	private static final String BROKER_XPATH = "//div[@class='contact-box']//div[1]/b";
 	
 	private WebDriver driver;
+	
+	public HomesBgConnector() {
+		this.driver = Utils.setupWebDriver();
+	}
 	
 	@Override
 	public Advert extractData(String url) {
@@ -44,7 +48,7 @@ public class HomesBgConnector implements Connector {
 		String price = Utils.getTextByXpath(driver, PRICE_XPATH);
 		price.replace(',', ' ');
 		
-		String floor = Utils.getTextByXpaths(driver, FLOOR_XPATH).substring(0, 2).trim();
+		String floor = Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 2).trim();
 		
 		String fullAddress = Utils.getTextByXpath(driver, FULL_ADDRESS_XPATH);
 		parts = fullAddress.split(COMMA_SEPARATOR);
@@ -108,9 +112,6 @@ public class HomesBgConnector implements Connector {
 
 	@Override
 	public void extractAdverts() {
-		
-		//TODO
-		driver.get("https://www.homes.bg/");
 		
 		ArrayList<String> urlHomesBg = (ArrayList<String>) this.urlArray();
 		

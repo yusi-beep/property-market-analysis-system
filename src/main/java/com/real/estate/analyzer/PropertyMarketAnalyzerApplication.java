@@ -9,15 +9,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.real.estate.analyzer.connectors.Connector;
 import com.real.estate.analyzer.connectors.HomesBgConnector;
 import com.real.estate.analyzer.connectors.ImotBgConnector;
 import com.real.estate.analyzer.entity.Advert;
 import com.real.estate.analyzer.repository.AdvertRepository;
-import com.real.estate.analyzer.utils.Utils;
 
 @SpringBootApplication
+@EnableJpaRepositories("com.real.estate.analyzer.repository")
 public class PropertyMarketAnalyzerApplication {
 	
 	private static final Logger log = LoggerFactory.getLogger(PropertyMarketAnalyzerApplication.class);
@@ -32,13 +33,11 @@ public class PropertyMarketAnalyzerApplication {
 		connector = new ImotBgConnector();
 		connector.extractAdverts();		
 	}
-
-	private LocalDateTime dateTime;
-	
+/*
 	@Bean
 	public CommandLineRunner testing(AdvertRepository repository) {
 		return (args) -> {
-			repository.save(new Advert("title", "squareFootage", "price", "floor", "address", "city", "broker", "url", dateTime));
+			repository.save(new Advert("title", "squareFootage", "price", "floor", "address", "city", "broker", "url", LocalDateTime.now()));
 		
 			  // fetch all adverts
 			  log.info("Customers found with findAll():");
@@ -56,10 +55,11 @@ public class PropertyMarketAnalyzerApplication {
 		      log.info("--------------------------------");
 		      log.info(Advert.toString());
 		      log.info("");
+		      
 		};
 		
 	}
-
+*/
 }
 	
 	

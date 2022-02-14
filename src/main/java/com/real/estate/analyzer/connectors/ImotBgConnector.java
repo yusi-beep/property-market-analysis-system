@@ -12,22 +12,26 @@ import com.real.estate.analyzer.utils.Utils;
 
 public class ImotBgConnector implements Connector {
 
-	private final String COMMA_SEPARATOR = ",";
+	private static final String COMMA_SEPARATOR = ",";
 	
-	private final String TITLE_XPATH = "//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//strong";
+	private static final String TITLE_XPATH = "//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//strong";
 	
-	private final String PRICE_XPATH = "//span[@id='cena']|//td[@class='valgtop']//span";
+	private static final String PRICE_XPATH = "//span[@id='cena']|//td[@class='valgtop']//span";
 	
-	private final String FLOOR_XPATH = "//ul[@class='imotData']//li[4]";
+	private static final String FLOOR_XPATH = "//ul[@class='imotData']//li[4]";
 	
-	private final String SQUARE_FOOTAGE = "//ul[@class='imotData']//li[2]";
+	private static final String SQUARE_FOOTAGE = "//ul[@class='imotData']//li[2]";
 	
-	private final String FULL_ADDRESS_XPATH = "//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//span[1]";
+	private static final String FULL_ADDRESS_XPATH = "//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//span[1]";
 	
-	private final String BROKER_XPATH = "//a[@class='name']";
+	private static final String BROKER_XPATH = "//a[@class='name']";
 	
 	private WebDriver driver;
 
+	public ImotBgConnector() {
+		this.driver = Utils.setupWebDriver();
+	}
+	
 	@Override
 	public Advert extractData(String url)  {
 		

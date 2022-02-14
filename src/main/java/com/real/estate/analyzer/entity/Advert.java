@@ -4,16 +4,18 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Advert {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column
-	private int id;
+	@GeneratedValue
+	private Long id;
 	
 	@Column
 	private String title;
@@ -40,10 +42,10 @@ public class Advert {
 	private String url;
 	
 	@Column
-	private LocalDateTime data;
+	private LocalDateTime date;
 
 	public Advert(String title, String squareFootage, String address, String city, String price, String floor,
-			String broker, String url, LocalDateTime data) {
+			String broker, String url, LocalDateTime date) {
 		this.title = title;
 		this.squareFootage = squareFootage;
 		this.address = address;
@@ -52,7 +54,7 @@ public class Advert {
 		this.floor = floor;
 		this.broker = broker;
 		this.url = url;
-		this.data = data;
+		this.date = date;
 	}
 	
 	
