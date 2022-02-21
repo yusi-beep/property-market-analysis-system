@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +20,7 @@ public class Advert {
 	private String title;
 	
 	@Column
-	private String squareFootage;
+	private int squareFootage;
 	
 	@Column
 	private String address;
@@ -30,10 +29,10 @@ public class Advert {
 	private String city;
 	
 	@Column
-	private String price;
+	private int price;
 	
 	@Column
-	private String floor;
+	private int floor;
 	
 	@Column
 	private String broker;
@@ -44,8 +43,9 @@ public class Advert {
 	@Column
 	private LocalDateTime date;
 
-	public Advert(String title, String squareFootage, String address, String city, String price, String floor,
+	public Advert(String title, int squareFootage, String address, String city, int price, int floor,
 			String broker, String url, LocalDateTime date) {
+		
 		this.title = title;
 		this.squareFootage = squareFootage;
 		this.address = address;

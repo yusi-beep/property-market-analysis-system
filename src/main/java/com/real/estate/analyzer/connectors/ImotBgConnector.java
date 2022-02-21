@@ -1,18 +1,22 @@
 package com.real.estate.analyzer.connectors;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-
 import com.real.estate.analyzer.entity.Advert;
 import com.real.estate.analyzer.utils.Utils;
 
 public class ImotBgConnector implements Connector {
-
+	
+	private static final String WORKPAGE_URL_LINK = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7ohjqp&f1=1";
+	
+	private static final String LAST_PAGE_XPATH = "//a[@class='pageNumbers'][last()]";
+	
 	private static final String COMMA_SEPARATOR = ",";
+	
+	private static final String CLICK_POPUP_XPATH = "//p [@class='fc-button-label']"; 
 	
 	private static final String TITLE_XPATH = "//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//strong";
 	
@@ -29,83 +33,105 @@ public class ImotBgConnector implements Connector {
 	private WebDriver driver;
 
 	public ImotBgConnector() {
+
 		this.driver = Utils.setupWebDriver();
 	}
 	
 	@Override
 	public Advert extractData(String url)  {
 		
-		int delay = 200;
-		
 		driver.get(url);
-	
-		Utils.sleep(delay);
 		
 		String title = Utils.getTextByXpath(driver, TITLE_XPATH);
 		
 		String fullAddress = Utils.getTextByXpath(driver, FULL_ADDRESS_XPATH);
 		
 		String[] parts;
-		
 		parts = fullAddress.split(COMMA_SEPARATOR);
 		
-		String address = parts[1]
-				.trim();
+		String address = parts[1].trim();
 		
-		String city = parts[0]
-				.substring(5);
+		String city = parts[0].substring(5);
 		
-		String price = Utils.getTextByXpath(driver, PRICE_XPATH);
+		String priceStr = Utils.getTextByXpath(driver, PRICE_XPATH).replaceAll("\\D+","");
+		int price = Utils.isEmpty(priceStr);
 		
-		String squareFootage = Utils.getTextByXpath(driver, SQUARE_FOOTAGE);
+		String squareFootageStr = Utils.getTextByXpath(driver, SQUARE_FOOTAGE).replaceAll("\\D+","");
+		int squareFootage = Utils.isEmpty(squareFootageStr);
 		
-		String floor = Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 2).trim();
+		String floorStr = Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 2).trim().replaceAll("\\D+","");
+		//TODO parter floor or floor don't exist
+		int floor = Utils.isEmpty(floorStr);
 		
 		String broker = Utils.getTextByXpath(driver, BROKER_XPATH);
 		
 		LocalDateTime dateTime = LocalDateTime.now();
 		
-		
 		Advert tempAdvert = new Advert(title, squareFootage,
-				price, floor, address, city, broker, url, dateTime);
+				address, city, price, floor, broker, url, dateTime);
+		
+		System.out.println(tempAdvert);
 			
-			System.out.println(tempAdvert);
-			
-			return tempAdvert;
+		return tempAdvert;
 	}
 
 	@Override
-	public List<String> urlArray() {
+	public HashSet<String> urlSet() {
 		
-		List<String> urlArray = new ArrayList<String>();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.get(WORKPAGE_URL_LINK);
+		Utils.click(driver, CLICK_POPUP_XPATH);
 		
-		int beginTableIndex = 6;
-		int contentCount = 45;
+		HashSet<String> urlSet = new HashSet<String>();
 		
-		int lastPageIndex = 2;
+		//TODO create working loop for crawling pages
+		String lastPage = Utils.getLinkXpath(driver, "//a[@class='pageNumbers'][last()-2]"); 
+		String lastPage1 = WORKPAGE_URL_LINK;
 		
-		for (int i = 0; i < lastPageIndex; i++) {
-			
-			for (int j = beginTableIndex; j < contentCount; j++) {
+		String pageNumbers = Utils.getTextByXpath(driver, "//span[@class='pageNumbersInfo']");
+		int pageNum = Integer.parseInt(pageNumbers.substring(pageNumbers.length()-3).trim());
+		pageNum = pageNum/10+pageNum%2;
+		
+		int razdel = 0;
+		while(pageNum!=razdel) {
+			razdel++;
+			int i = 1;
+	
+			while (!lastPage1.equals(lastPage)) {
 				
-				String url = driver
-						.findElement(By.xpath("//table[" + j + "]//a"))
-						.getAttribute("href")
-						.toString();
+				int beginTableIndex = 6;
+				int contentCount = 10;
 				
-				 urlArray.add(url);
+				for (int j = beginTableIndex; j < contentCount; j++) {
+		
+					String url = Utils.getLinkXpath(driver, "//table[" + j + "]//a");
+					urlSet.add(url);
+				}
+				lastPage1 = driver.getCurrentUrl();
+				Utils.click(driver, "//td[@width='500']/a[" + i + "]");
+				
+				i++;
+				
+				log.info("This is lastPage loop");
 			}
-		
 			
-		driver.findElement(By.xpath("//td[@width='500']//a[" + (i + 1) + "]")).click();
+			//i = 2;
+			Utils.click(driver, LAST_PAGE_XPATH);
+			log.info("This is lastPage2 loop");
 		}
-		
-		return urlArray;
+		return urlSet;
 	}
-
+	
+	//TODO Add repository saving function
 	@Override
 	public void extractAdverts() {
-		// TODO Auto-generated method stub
 		
+		HashSet<String> urlLinks = (HashSet<String>) this.urlSet();
+		
+		for (String url : urlLinks) {
+
+			extractData(url);
+			Utils.sleep(2000);		
+		}
 	}
 }

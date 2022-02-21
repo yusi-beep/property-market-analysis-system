@@ -1,21 +1,22 @@
 package com.real.estate.analyzer.connectors;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.HashSet;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
 import com.real.estate.analyzer.entity.Advert;
 import com.real.estate.analyzer.utils.Utils;
 
 public class HomesBgConnector implements Connector {
 	
+	private static final String WORKPAGE_URL_LINK = "https://www.homes.bg/?currencyId=1&filterOrderBy=0&locationId=0&typeId=ApartmentSell";
+	
 	private static final String COMMA_SEPARATOR = ",";
 	
 	private static final String FULL_TITLE_XPATH = "//div[@class='section-title']//h1";
+	
+	private static final String TOTAL_ADVERTS = "//span[@class='milestone-total']";
 	
 	private static final String PRICE_XPATH = "//span[@class='ver20black']";
 	
@@ -28,6 +29,7 @@ public class HomesBgConnector implements Connector {
 	private WebDriver driver;
 	
 	public HomesBgConnector() {
+		
 		this.driver = Utils.setupWebDriver();
 	}
 	
@@ -35,7 +37,6 @@ public class HomesBgConnector implements Connector {
 	public Advert extractData(String url) {
 		
 		driver.get(url);
-		Utils.sleep(200);
 		
 		String fullTitle = Utils.getTextByXpath(driver, FULL_TITLE_XPATH);
 		String[] parts;
@@ -43,17 +44,19 @@ public class HomesBgConnector implements Connector {
 		
 		String title = parts[0].trim();
 		
-		String squareFootage = parts[1].trim();
+		String squareFootageStr = parts[1].trim().replaceAll("\\D+","");
+		int squareFootage = Utils.isEmpty(squareFootageStr);
 		
-		String price = Utils.getTextByXpath(driver, PRICE_XPATH);
-		price.replace(',', ' ');
+		String priceStr = Utils.getTextByXpath(driver, PRICE_XPATH).replaceAll("\\D+","");
+		int price = Utils.isEmpty(priceStr);
 		
-		String floor = Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 2).trim();
+		String floorStr = Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 1).trim().replaceAll("\\D+","");
+		int floor = Utils.isEmpty(floorStr);
 		
 		String fullAddress = Utils.getTextByXpath(driver, FULL_ADDRESS_XPATH);
 		parts = fullAddress.split(COMMA_SEPARATOR);
 		
-		String address = parts[0];
+		String address = parts[0].trim();
 		
 		String city = parts[1].trim();
 		
@@ -62,7 +65,7 @@ public class HomesBgConnector implements Connector {
 		LocalDateTime dateTime = LocalDateTime.now();
 
 		Advert tempAdvert = new Advert(title, squareFootage,
-				price, floor, address, city, broker, url, dateTime);
+				address, city, price, floor, broker, url, dateTime);
 		
 		System.out.println(tempAdvert);
 		
@@ -70,56 +73,62 @@ public class HomesBgConnector implements Connector {
 	}
 
 	@Override
-	public List<String> urlArray() {
+	public HashSet<String> urlSet() {
 		
-		List<String> urlArray = new ArrayList<String>();
+		driver.get(WORKPAGE_URL_LINK);
 		
-		int numberOfUrls = 40;
-		
+		HashSet<String> urlSet = new HashSet<String>();
+		/*
+		Utils.sleep(2000);
+		String totalAdverts = Utils.getTextByXpath(driver, TOTAL_ADVERTS);
+		int numberOfUrls = Integer.parseInt(totalAdverts);
+		*/
 		WebElement url;
 		
-		for (int i = 0; i < numberOfUrls; i++) {
+		for (int i = 1; i < /*numberOfUrls*/20; i++) {
 			
 			boolean isEven = i % 2 == 0;
 			
-			if (i > 4 && isEven) {
+			if (i > 3 && isEven) {
 				
 				url = driver
 						.findElement(By
 						.xpath("//div[@class='ReactVirtualized__Grid__innerScrollContainer']/div[4]//a"));
-			} else if (isEven) {
 				
-				url = driver
-						.findElement(By
-						.xpath("//div[@class='ReactVirtualized__Grid__innerScrollContainer']/div[5]//a"));
-			} else {
+			} else if (i < 3) {
 				
 				url = driver
 					.findElement(By
-					.xpath("//div[@class='ReactVirtualized__Grid__innerScrollContainer']/div[" + (i + 1) + "]//a"));
-			}
+					.xpath("//div[@class='ReactVirtualized__Grid__innerScrollContainer']/div[" + i + "]//a"));
+				
+			} else {
+				
+				url = driver
+						.findElement(By
+						.xpath("//div[@class='ReactVirtualized__Grid__innerScrollContainer']/div[3]//a"));
+		        }
 			
-			urlArray.add(url.getAttribute("href"));
-		
 			Utils.scroll(url, driver);
-	        Utils.sleep(200);
-	        
-	        System.out.println(i + "-->" + url.getAttribute("href"));
-		}
+	        Utils.sleep(2000);
+			urlSet.add(url.getAttribute("href"));
 		
-		return urlArray;
+			System.out.println(i + "-->" + url.getAttribute("href"));
+	       
+			}
+		
+		return urlSet;
 	}
-
+	
+	//TODO Add repository saving function
 	@Override
 	public void extractAdverts() {
 		
-		ArrayList<String> urlHomesBg = (ArrayList<String>) this.urlArray();
+		HashSet<String> urlLinks = (HashSet<String>) this.urlSet();
 		
-		for (String url : urlHomesBg) {
+		for (String url : urlLinks) {
 			
-			this.extractData(url);
-			Utils.sleep(200);
-		}		
+			extractData(url);
+			Utils.sleep(2000);
+		}	
 	}
-
 }
