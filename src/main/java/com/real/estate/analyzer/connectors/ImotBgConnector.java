@@ -4,21 +4,21 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import com.real.estate.analyzer.entity.Advert;
 import com.real.estate.analyzer.utils.Utils;
 
 public class ImotBgConnector implements Connector {
 	
-	private static final String WORKPAGE_URL_LINK = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7ohjqp&f1=1";
-	
-	private static final String LAST_PAGE_XPATH = "//a[@class='pageNumbers'][last()]";
+	private static final String WORKPAGE_URL_LINK = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7psipm&f1=1";
 	
 	private static final String COMMA_SEPARATOR = ",";
 	
 	private static final String CLICK_POPUP_XPATH = "//p [@class='fc-button-label']"; 
 	
-	private static final String TITLE_XPATH = "//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//strong";
+	private static final String TITLE_XPATH = 
+			"//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//strong";
 	
 	private static final String PRICE_XPATH = "//span[@id='cena']|//td[@class='valgtop']//span";
 	
@@ -26,7 +26,8 @@ public class ImotBgConnector implements Connector {
 	
 	private static final String SQUARE_FOOTAGE = "//ul[@class='imotData']//li[2]";
 	
-	private static final String FULL_ADDRESS_XPATH = "//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//span[1]";
+	private static final String FULL_ADDRESS_XPATH = 
+			"//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//span[1]";
 	
 	private static final String BROKER_XPATH = "//a[@class='name']";
 	
@@ -53,15 +54,14 @@ public class ImotBgConnector implements Connector {
 		
 		String city = parts[0].substring(5);
 		
-		String priceStr = Utils.getTextByXpath(driver, PRICE_XPATH).replaceAll("\\D+","");
-		int price = Utils.isEmpty(priceStr);
+		String priceStr = Utils.getTextByXpath(driver, PRICE_XPATH).replaceAll("\\D+", "");
+		Integer price = Utils.parseInteger(priceStr);
 		
-		String squareFootageStr = Utils.getTextByXpath(driver, SQUARE_FOOTAGE).replaceAll("\\D+","");
-		int squareFootage = Utils.isEmpty(squareFootageStr);
+		String squareFootageStr = Utils.getTextByXpath(driver, SQUARE_FOOTAGE).replaceAll("\\D+", "");
+		Integer squareFootage = Utils.parseInteger(squareFootageStr);
 		
-		String floorStr = Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 2).trim().replaceAll("\\D+","");
-		//TODO parter floor or floor don't exist
-		int floor = Utils.isEmpty(floorStr);
+		String floorStr = Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 2).trim().replaceAll("\\D+", "");
+		Integer floor = Utils.parseInteger(floorStr);
 		
 		String broker = Utils.getTextByXpath(driver, BROKER_XPATH);
 		
@@ -80,58 +80,31 @@ public class ImotBgConnector implements Connector {
 		
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		driver.get(WORKPAGE_URL_LINK);
-		Utils.click(driver, CLICK_POPUP_XPATH);
+		driver.findElement(By.xpath(CLICK_POPUP_XPATH)).click();
 		
 		HashSet<String> urlSet = new HashSet<String>();
 		
-		//TODO create working loop for crawling pages
-		String lastPage = Utils.getLinkXpath(driver, "//a[@class='pageNumbers'][last()-2]"); 
-		String lastPage1 = WORKPAGE_URL_LINK;
+		String pagesNumber = Utils.getTextByXpath(driver, "//span[@class='pageNumbersInfo']");
+		int lastPage = Integer.parseInt(pagesNumber.substring(pagesNumber.length() - 3).trim());
 		
-		String pageNumbers = Utils.getTextByXpath(driver, "//span[@class='pageNumbersInfo']");
-		int pageNum = Integer.parseInt(pageNumbers.substring(pageNumbers.length()-3).trim());
-		pageNum = pageNum/10+pageNum%2;
-		
-		int razdel = 0;
-		while(pageNum!=razdel) {
-			razdel++;
-			int i = 1;
+		int page = 1;
 	
-			while (!lastPage1.equals(lastPage)) {
-				
+		while (page != lastPage) {
+			
 				int beginTableIndex = 6;
-				int contentCount = 10;
+				int contentCount = 45;
 				
-				for (int j = beginTableIndex; j < contentCount; j++) {
+				for (int j = beginTableIndex; j <= contentCount; j++) {
 		
 					String url = Utils.getLinkXpath(driver, "//table[" + j + "]//a");
 					urlSet.add(url);
 				}
-				lastPage1 = driver.getCurrentUrl();
-				Utils.click(driver, "//td[@width='500']/a[" + i + "]");
-				
-				i++;
-				
-				log.info("This is lastPage loop");
-			}
 			
-			//i = 2;
-			Utils.click(driver, LAST_PAGE_XPATH);
-			log.info("This is lastPage2 loop");
+			String nextPage = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7psipm&f1=" + page;
+			driver.get(nextPage);
+			page++;
 		}
+		
 		return urlSet;
-	}
-	
-	//TODO Add repository saving function
-	@Override
-	public void extractAdverts() {
-		
-		HashSet<String> urlLinks = (HashSet<String>) this.urlSet();
-		
-		for (String url : urlLinks) {
-
-			extractData(url);
-			Utils.sleep(2000);		
-		}
 	}
 }

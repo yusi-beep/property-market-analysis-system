@@ -2,7 +2,10 @@ package com.real.estate.analyzer.entity;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +23,7 @@ public class Advert {
 	private String title;
 	
 	@Column
-	private int squareFootage;
+	private Integer squareFootage;
 	
 	@Column
 	private String address;
@@ -29,10 +32,10 @@ public class Advert {
 	private String city;
 	
 	@Column
-	private int price;
+	private Integer price;
 	
 	@Column
-	private int floor;
+	private Integer floor;
 	
 	@Column
 	private String broker;
@@ -43,7 +46,7 @@ public class Advert {
 	@Column
 	private LocalDateTime date;
 
-	public Advert(String title, int squareFootage, String address, String city, int price, int floor,
+	public Advert(String title, Integer squareFootage, String address, String city, Integer price, Integer floor,
 			String broker, String url, LocalDateTime date) {
 		
 		this.title = title;

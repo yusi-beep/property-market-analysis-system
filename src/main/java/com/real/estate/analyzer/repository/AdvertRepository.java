@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.real.estate.analyzer.entity.Advert;
 
 @Repository
-public interface AdvertRepository extends CrudRepository<Advert, Long>{
+public interface AdvertRepository extends CrudRepository<Advert, Long> {
 
 	List<Advert> findByPrice(String price);
 }

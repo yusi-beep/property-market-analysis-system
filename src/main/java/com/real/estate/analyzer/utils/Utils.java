@@ -2,6 +2,7 @@ package com.real.estate.analyzer.utils;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -27,7 +28,7 @@ public class Utils {
 	
 	public static void scroll(WebElement element, WebDriver driver) {
 		
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element );
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
 		
 	}
 	
@@ -35,60 +36,129 @@ public class Utils {
 		
 		System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
 		ChromeOptions options = new ChromeOptions();
-		options.setHeadless(false);
+		options.setHeadless(true);
 		
 		return new ChromeDriver(options);
 	}
 	
-	//check xpath contains
 	public static String getTextByXpath(WebDriver driver, String xPath) {
-
+		 	
 		try {
 			
-			WebElement element = driver.findElement(By.xpath(xPath));
-			return element.getText();
+			String element = driver.findElement(By.xpath(xPath)).getText();
+				
+			return element;
 			
-		} catch (Exception e) {
-			log.info("Element exists with xpath [" + xPath + "]");
+		} catch (NoSuchElementException e) {
+			
+			log.info("Element don't exists with xpath [" + xPath + "]");
+			
+			return "";
+		
+		} catch (NullPointerException e) {
+			
 			return "";
 		}
 	}
 	
 	public static String getLinkXpath(WebDriver driver, String xPath) {
-
-		WebElement element = driver.findElement(By.xpath(xPath));
-			
-		if (element != null) {
-			return element.getAttribute("href");
-		}
-			
-		log.info("Element exists with xpath [" + xPath + "]");
-		
-		return "";
-	}
-	
-	public static void click(WebDriver driver, String xPath) {
 		
 		try {
 			
 			WebElement element = driver.findElement(By.xpath(xPath));
-			element.click();
 		
-		} catch (Exception e){
+			return element.getAttribute("href");
+		
+		} catch (NoSuchElementException e) {
 			
-			e.printStackTrace();
-			log.info("This is stale element exeption in >>>>>>>>"+ xPath+"<<<<<");
+			log.info("Element don't exists with xpath [" + xPath + "]");
+			
+			return "";
 		}
 	}
 	
-	public static int isEmpty(String string) {
+	public static Integer parseInteger(String string) {
 		
-		if(!string.isEmpty()) {
+		try {
 			
-			int value = Integer.parseInt(string);
+			Integer value = Integer.parseInt(string);
+			
 			return value;
+			
+		} catch (NumberFormatException e) {
+			
+			log.info("Number format at string: " + string);
+			
+			return null;
 		}
+	}
+	
+	public static Integer parseInt(String string) {
 		
-		return 0;
+		try {
+			
+			int intValue = Integer.parseInt(string.substring(0, 3).replaceAll("\\D+", ""));
+			
+			return intValue;
+			
+		} catch (NumberFormatException e) {
+			
+			log.info("Number format at string: " + string);
+			
+			return 0;
+			
+		} catch (StringIndexOutOfBoundsException e) {
+			
+			log.info("String index out of bound:" + string);
+			
+			return null;
+		
+		} catch (NullPointerException e) {
+			
+			log.info("Null pointer at string: " + string);
+			
+			return 0;
+		}
+	}
+	
+public static Integer parseIntTotal(String string) {
+		
+		try {
+			//TODO----------------------
+			int intValue = Integer.parseInt(string);
+			
+			return intValue;
+			
+		} catch (NumberFormatException e) {
+			
+			log.info("Number format at string: " + string);
+			
+			return 0;
+		
+		} catch (NullPointerException e) {
+	
+			log.info("Null pointer at string: " + string);
+	
+			return 0;
+		}
+	}
+
+	public static String[] split(String splitAt, String string) {
+	
+		String[] parts = new String[2];
+	
+		if (string.contains(",")) {
+	
+			parts = string.split(splitAt);
+	
+			return parts;
+	
+		} else {
+	
+			parts[0] = "";
+			parts[1] = "";
+	
+			return parts;
+		}
 	}
 }
