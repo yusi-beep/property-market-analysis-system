@@ -10,5 +10,5 @@ import com.real.estate.analyzer.entity.Advert;
 @Repository
 public interface AdvertRepository extends CrudRepository<Advert, Long> {
 
-	List<Advert> findByPrice(String price);
+	List<Advert> findByAddress(String address);
 }

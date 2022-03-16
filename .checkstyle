@@ -3,5 +3,15 @@
 <fileset-config file-format-version="1.2.0" simple-config="true" sync-formatter="false">
   <fileset name="all" enabled="true" check-config-name="Google Checks" local="false">
     <file-match-pattern match-pattern=".*" include-pattern="true"/>
+
+    <module name="JavadocMethod">
+      <property name="accessModifiers" value="public"/>
+      <property name="allowMissingParamTags" value="true"/>
+    </module>
+    
+    <module name="FileTabCharacter">
+      <property name="eachLine" value="false"/>
+    </module>
+
   </fileset>
 </fileset-config>

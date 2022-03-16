@@ -10,8 +10,10 @@ import com.real.estate.analyzer.entity.Advert;
 import com.real.estate.analyzer.utils.Utils;
 
 public class ImotBgConnector implements Connector {
+													
+	private static final String WORKPAGE_URL_LINK = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7rx48x&f1=1";
 	
-	private static final String WORKPAGE_URL_LINK = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7psipm&f1=1";
+	private static final String PAGE_URL = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7rx48x&f1=";
 	
 	private static final String COMMA_SEPARATOR = ",";
 	
@@ -100,7 +102,7 @@ public class ImotBgConnector implements Connector {
 					urlSet.add(url);
 				}
 			
-			String nextPage = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7psipm&f1=" + page;
+			String nextPage = PAGE_URL + page;
 			driver.get(nextPage);
 			page++;
 		}

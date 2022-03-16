@@ -3,6 +3,7 @@ package com.real.estate.analyzer.utils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -36,6 +37,15 @@ public class Utils {
 		
 		System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
 		ChromeOptions options = new ChromeOptions();
+		
+		options.addArguments("enable-automation");
+		options.addArguments("--window-size=1920,1080");
+		options.addArguments("--no-sandbox");
+		options.addArguments("--disable-extensions");
+		options.addArguments("--dns-prefetch-disable");
+		options.addArguments("--disable-gpu");
+		options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+		
 		options.setHeadless(true);
 		
 		return new ChromeDriver(options);
