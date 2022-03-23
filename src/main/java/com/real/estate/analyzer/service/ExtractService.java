@@ -40,8 +40,6 @@ public class ExtractService implements CommandLineRunner {
 		urlLinks = (HashSet<String>) connector.urlSet();
 		checkLinks(urlLinks);
 		saving(urlLinks);
-		
-		testSaving();
 	}
 	
 	public void checkLinks(HashSet<String> urlLink) {
@@ -63,29 +61,8 @@ public class ExtractService implements CommandLineRunner {
 			
 			advert = connector.extractData(url);
 			
-			boolean duplicates = Utils.isDuplicate(advert.getAddress(),
-						advert.getCity(), advert.getFloor(), advert.getSquareFootage(), advert.getBroker());
-
-			if (advert.getTitle() != "" && duplicates) {
-				
-				advertRepository.save(advert);
-				Utils.sleep(2000);
-				
-			} else {
-				
-				System.out.println(advert);
-			}
-		}	
-	}
-	
-	public void testSaving() {
-		
-		List<Advert> adList = read();
-		
-		for (Advert advert : adList) {
-			
 			boolean duplicates;
-
+			
 			try {
 				 duplicates = advertRepository.checkForDuplicates(
 						advert.getAddress(),
@@ -109,25 +86,5 @@ public class ExtractService implements CommandLineRunner {
 				System.out.println(advert);
 			}
 		}	
-	}
-	
-	public List<Advert> read() {
-		List<Advert> advertList = new ArrayList<Advert>();
-		Advert advert = new Advert("Продава 1-СТАЕН", 45, "Боян Българанов 1", "Шумен", 65000, 3, "ПРЕСТИЖ-2007", "//www.homes.bg1", LocalDateTime.now());
-		advertList.add(advert); 
-		advert = new Advert("Продава 2-СТАЕН", 60, "Боян Българанов 1", "Шумен", 82000, 6, "ПЕРФЕКТ-2006", "//www.homes.bg2", LocalDateTime.now());
-		advertList.add(advert);
-		advert = new Advert("Двустаен апартамент за продажба", 70, "Боян Българанов 1", "Шумен", 95000, 14, "Аджест хоум", "//www.homes.bg3", LocalDateTime.now());
-		advertList.add(advert);
-		advert = new Advert("Продава 1-СТАЕН", 45, "Боян Българанов 1", "Шумен", 65000, 3, "ПРЕСТИЖ-2007", "//www.homes.bg4", LocalDateTime.now());
-		advertList.add(advert);
-		advert = new Advert("Едностаен апартамент за продажба", 48, "Боян Българанов 1", "Шумен", 53000, 6, "Имоти Томов", "//www.homes.bg5", LocalDateTime.now());
-		advertList.add(advert);
-		advert = new Advert("Имот 5", 55, "Самара", "Шумен", 115000, 2, "Рако ", "//www.homes.bg6", LocalDateTime.now());
-		advertList.add(advert);
-		advert = new Advert("Имот 6", 60, "Самара", "Шумен", 116000, 2, "Рако ", "//www.homes.bg7", LocalDateTime.now());
-		advertList.add(advert);
-		
-		return advertList;
 	}
 }
