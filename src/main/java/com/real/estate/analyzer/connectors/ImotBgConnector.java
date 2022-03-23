@@ -11,9 +11,9 @@ import com.real.estate.analyzer.utils.Utils;
 
 public class ImotBgConnector implements Connector {
 													
-	private static final String WORKPAGE_URL_LINK = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7rx48x&f1=1";
+	private static final String WORKPAGE_URL_LINK = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7t1qm4&f1=1";
 	
-	private static final String PAGE_URL = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7rx48x&f1=";
+	private static final String PAGE_URL = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7t1qm4&f1=";
 	
 	private static final String COMMA_SEPARATOR = ",";
 	
@@ -72,7 +72,7 @@ public class ImotBgConnector implements Connector {
 		Advert tempAdvert = new Advert(title, squareFootage,
 				address, city, price, floor, broker, url, dateTime);
 		
-		System.out.println(tempAdvert);
+		//System.out.println(tempAdvert);
 			
 		return tempAdvert;
 	}

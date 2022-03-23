@@ -11,9 +11,12 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.real.estate.analyzer.repository.AdvertRepository;
+
 public class Utils {
 	
 	private static final Logger log = LoggerFactory.getLogger(Utils.class);
+	private static AdvertRepository advertRepository;
 	
 	public static void sleep(int time)  {
 		
@@ -134,7 +137,7 @@ public class Utils {
 public static Integer parseIntTotal(String string) {
 		
 		try {
-			//TODO----------------------
+		
 			int intValue = Integer.parseInt(string);
 			
 			return intValue;
@@ -169,6 +172,24 @@ public static Integer parseIntTotal(String string) {
 			parts[1] = "";
 	
 			return parts;
+		}
+	}
+	
+	public static boolean isDuplicate(String address, 
+			String city, Integer floor, Integer squareFootage, String broker) {
+		
+		try {
+			
+			boolean isDuplicates = advertRepository.checkForDuplicates(
+					address, city, floor, squareFootage, broker) == null;
+			 
+			 return isDuplicates;
+			 
+		} catch (org.springframework.dao.IncorrectResultSizeDataAccessException e ) {
+			return false;
+			
+		} catch (NullPointerException e) {
+			return true;
 		}
 	}
 }

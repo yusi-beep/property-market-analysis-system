@@ -72,7 +72,7 @@ public class HomesBgConnector implements Connector {
 		Advert tempAdvert = new Advert(title, squareFootage,
 								address, city, price, floor, broker, url, dateTime);
 		
-		System.out.println(tempAdvert);
+		//System.out.println(tempAdvert);
 		
 		return tempAdvert;
 	}
