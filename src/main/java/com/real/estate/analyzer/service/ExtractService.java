@@ -30,7 +30,7 @@ public class ExtractService implements CommandLineRunner {
 	
 	@Override
 	public void run(String... args) throws Exception {			
-		/*
+		
 		connector = new ImotBgConnector();
 		urlLinks = (HashSet<String>) connector.urlSet();
 		checkLinks(urlLinks);
@@ -40,7 +40,6 @@ public class ExtractService implements CommandLineRunner {
 		urlLinks = (HashSet<String>) connector.urlSet();
 		checkLinks(urlLinks);
 		saving(urlLinks);
-		*/
 		
 		testSaving();
 	}
@@ -86,7 +85,7 @@ public class ExtractService implements CommandLineRunner {
 		for (Advert advert : adList) {
 			
 			boolean duplicates;
-//TODO move try catch to utils
+
 			try {
 				 duplicates = advertRepository.checkForDuplicates(
 						advert.getAddress(),
@@ -131,20 +130,4 @@ public class ExtractService implements CommandLineRunner {
 		
 		return advertList;
 	}
-	
-	
-	/*
-	try {
-		 duplicates = advertRepository.checkForDuplicates(
-				advert.getAddress(),
-				advert.getCity(),
-				advert.getFloor(),
-				advert.getSquareFootage(),
-				advert.getBroker()) == null;
-		 
-	} catch (org.springframework.dao.IncorrectResultSizeDataAccessException e ) {
-		
-		duplicates = false;
-	}
-	*/
 }
