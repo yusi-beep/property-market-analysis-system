@@ -8,6 +8,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import com.real.estate.analyzer.entity.Advert;
+import com.real.estate.analyzer.entity.City;
+import com.real.estate.analyzer.entity.Neighborhood;
+import com.real.estate.analyzer.entity.RealEstateAgency;
+import com.real.estate.analyzer.entity.RealEstateType;
 import com.real.estate.analyzer.utils.Utils;
 
 public class HomesBgConnector implements Connector {
@@ -28,7 +32,18 @@ public class HomesBgConnector implements Connector {
 	
 	private static final String FULL_ADDRESS_XPATH = "//div[@class='mdc-layout-grid__inner']//b//h2";
 	
-	private static final String BROKER_XPATH = "//div[@class='contact-box']//div[1]/b";
+	private static final String AGENCY_XPATH = "//div[@class='contact-box']//div[1]/b";
+	
+//	private static final String BROKER_XPATH = "//text()[contains(.,'брокер')]//preceding-sibling::span";
+	
+//	private static final String BROKER_PHONE_XPATH = "//text()[contains(.,'брокер')]//following::a";
+	
+	//TODO extract extra agency info
+	private static final String AGENCY_ADDRESS_XPATH = " ";
+	
+	private static final String AGENCY_TEL_XPATH = " ";
+	
+	private static final String AGENCY_CITY_XPATH = " ";
 	
 	private WebDriver driver;
 	
@@ -46,7 +61,7 @@ public class HomesBgConnector implements Connector {
 		String[] parts;
 		parts = Utils.split(COMMA_SEPARATOR, fullTitle);	
 		
-		String title = parts[0].trim();
+		String estateType = parts[0].trim();
 			
 		String squareFootageStr = parts[1].trim().replaceAll("\\D+", "");
 		
@@ -61,18 +76,30 @@ public class HomesBgConnector implements Connector {
 		String fullAddress = Utils.getTextByXpath(driver, FULL_ADDRESS_XPATH);
 		parts = Utils.split(COMMA_SEPARATOR, fullAddress);
 		
-		String address = parts[0].trim();
+		String neighborhood = parts[0].trim();
 		
 		String city = parts[1].trim();
 		
-		String broker = Utils.getTextByXpath(driver, BROKER_XPATH);
+		//String broker = Utils.getTextByXpath(driver, BROKER_XPATH);
+		
+		//String brokerTel = Utils.getTextByXpath(driver, BROKER_PHONE_XPATH);
+		
+		String agency = Utils.getTextByXpath(driver, AGENCY_XPATH);
 		
 		LocalDateTime dateTime = LocalDateTime.now();
 
-		Advert tempAdvert = new Advert(title, squareFootage,
-								address, city, price, floor, broker, url, dateTime);
+		City tempCity = new City(city);
 		
-		//System.out.println(tempAdvert);
+		RealEstateAgency tempAgency = new RealEstateAgency(agency);
+		
+		RealEstateType tempEstateType = RealEstateType.getTypeFrom(estateType);
+		
+		Neighborhood tempNeighborhood = new Neighborhood(neighborhood, tempCity);
+		
+		Advert tempAdvert = new Advert(tempEstateType, squareFootage,
+				tempNeighborhood, price, floor, tempAgency, url, dateTime);
+		
+		System.out.println(tempAdvert);
 		
 		return tempAdvert;
 	}

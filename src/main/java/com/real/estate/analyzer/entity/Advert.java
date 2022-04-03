@@ -4,8 +4,16 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,22 +22,22 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 public class Advert {
-
-	@Id
-	@GeneratedValue
-	private Long id;
 	
+    @Id
+    @GeneratedValue
+    private Long id;
+    
+	@Enumerated(EnumType.STRING)
 	@Column
-	private String title;
+	private RealEstateType typeEstate;
 	
 	@Column
 	private Integer squareFootage;
 	
-	@Column
-	private String address;
-	
-	@Column
-	private String city;
+	@ManyToOne
+	@Cascade(CascadeType.SAVE_UPDATE)
+	@JoinColumn(name = "NEIGHBORHOOD_ID", referencedColumnName = "ID", nullable = false)
+	private Neighborhood neighborhoodId;
 	
 	@Column
 	private Integer price;
@@ -37,28 +45,27 @@ public class Advert {
 	@Column
 	private Integer floor;
 	
-	@Column
-	private String broker;
+	@ManyToOne
+	@Cascade(CascadeType.SAVE_UPDATE)
+	@JoinColumn(name = "AGENCY_ID", referencedColumnName = "ID", nullable = false)
+	private RealEstateAgency agencyId;
 
-	@Column(unique=true)
+	@Column(unique = true)
 	private String url;
 	
 	@Column
 	private LocalDateTime date;
 
-	public Advert(String title, Integer squareFootage, String address, String city, Integer price, Integer floor,
-			String broker, String url, LocalDateTime date) {
+	public Advert(RealEstateType typeEstate, Integer squareFootage, Neighborhood neighborhood,
+			Integer price, Integer floor, RealEstateAgency agency, String url, LocalDateTime date) {
 		
-		this.title = title;
+		this.typeEstate = typeEstate;
 		this.squareFootage = squareFootage;
-		this.address = address;
-		this.city = city;
+		this.neighborhoodId = neighborhood;
 		this.price = price;
 		this.floor = floor;
-		this.broker = broker;
+		this.agencyId = agency;
 		this.url = url;
 		this.date = date;
 	}
-	
-	
 }

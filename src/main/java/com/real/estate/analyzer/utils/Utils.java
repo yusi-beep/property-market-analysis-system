@@ -11,12 +11,17 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.real.estate.analyzer.entity.City;
 import com.real.estate.analyzer.repository.AdvertRepository;
+import com.real.estate.analyzer.repository.CityRepository;
 
 public class Utils {
 	
 	private static final Logger log = LoggerFactory.getLogger(Utils.class);
+	
 	private static AdvertRepository advertRepository;
+	
+	private static CityRepository cityRepository;
 	
 	public static void sleep(int time)  {
 		
@@ -174,7 +179,7 @@ public static Integer parseIntTotal(String string) {
 			return parts;
 		}
 	}
-	
+	/*
 	public static boolean isDuplicate(String address, 
 			String city, Integer floor, Integer squareFootage, String broker) {
 		
@@ -192,4 +197,5 @@ public static Integer parseIntTotal(String string) {
 			return true;
 		}
 	}
+	*/
 }

@@ -6,22 +6,32 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.real.estate.analyzer.entity.Advert;
+import com.real.estate.analyzer.entity.Neighborhood;
 
 @Repository
 public interface AdvertRepository extends CrudRepository<Advert, Long> {
-	
+	/*
 	@Query(value = "select * \n" +
             "from advert \n" +
-            "where address = :address \n" +
-            "and city = :city \n" +
+            "where neighborhood = :neighborhood \n" +
             "and floor = :floor \n" +
-            "and square_footage = :squareFootage \n" +
-            "and broker = :broker \n ",
+            "and square_footage = :squareFootage \n",
             nativeQuery = true)
     Advert checkForDuplicates(
-    		@Param("address") String address,
-    		@Param("city") String city,
+    		@Param("neighborhood") Neighborhood neighborhood,
     		@Param("floor") Integer floor,
-    		@Param("squareFootage") Integer squareFootage,
-    		@Param("broker") String broker);
+    		@Param("squareFootage") Integer squareFootage);
+	
+	@Query(value = "select MIN(price)\n" +
+					"from advert")
+	Advert getMinPrice();
+	
+	@Query(value = "select MAX(price)\n" +
+			"from advert")
+	Advert getMaxPrice();
+	
+	@Query(value = "select AVG(price)\n" +
+			"from advert")
+	Advert getAvgPrice();
+	*/
 }

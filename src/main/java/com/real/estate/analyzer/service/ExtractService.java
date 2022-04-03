@@ -14,6 +14,9 @@ import com.real.estate.analyzer.connectors.Connector;
 import com.real.estate.analyzer.connectors.HomesBgConnector;
 import com.real.estate.analyzer.connectors.ImotBgConnector;
 import com.real.estate.analyzer.entity.Advert;
+import com.real.estate.analyzer.entity.City;
+import com.real.estate.analyzer.entity.Neighborhood;
+import com.real.estate.analyzer.entity.RealEstateAgency;
 import com.real.estate.analyzer.repository.AdvertRepository;
 import com.real.estate.analyzer.utils.Utils;
 
@@ -40,6 +43,7 @@ public class ExtractService implements CommandLineRunner {
 		urlLinks = (HashSet<String>) connector.urlSet();
 		checkLinks(urlLinks);
 		saving(urlLinks);
+		
 	}
 	
 	public void checkLinks(HashSet<String> urlLink) {
@@ -47,7 +51,6 @@ public class ExtractService implements CommandLineRunner {
 		for (Advert advert : advertRepository.findAll()) {
 			
 	        if (urlLink.contains(advert.getUrl())) {
-	        	
 	        	urlLink.remove(advert.getUrl());
 	        }
 	    }
@@ -60,31 +63,28 @@ public class ExtractService implements CommandLineRunner {
 		for (String url : urlLinks) {
 			
 			advert = connector.extractData(url);
-			
+		
 			boolean duplicates;
-			
+			/*
 			try {
 				 duplicates = advertRepository.checkForDuplicates(
-						advert.getAddress(),
-						advert.getCity(),
+						advert.getNeighborhoodId(),
 						advert.getFloor(),
-						advert.getSquareFootage(),
-						advert.getBroker()) == null;
+						advert.getSquareFootage()) == null;
 				 
 			} catch (org.springframework.dao.IncorrectResultSizeDataAccessException e ) {
 				
 				duplicates = false;
 			}
-			
-			if (advert.getTitle() != "" && duplicates) {
-				
+			*/
+			if (advert.getNeighborhoodId() != null) {
 				advertRepository.save(advert);
 				Utils.sleep(2000);
-				
-			} else {
+			
+			}/* else {
 				
 				System.out.println(advert);
-			}
+			}*/
 		}	
 	}
 }
