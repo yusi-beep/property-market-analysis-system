@@ -1,18 +1,20 @@
 package com.real.estate.analyzer.connectors;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import com.real.estate.analyzer.entity.Advert;
-import com.real.estate.analyzer.entity.City;
-import com.real.estate.analyzer.entity.Neighborhood;
-import com.real.estate.analyzer.entity.RealEstateAgency;
-import com.real.estate.analyzer.entity.RealEstateType;
+import com.real.estate.analyzer.entities.Advert;
+import com.real.estate.analyzer.entities.City;
+import com.real.estate.analyzer.entities.Neighborhood;
+import com.real.estate.analyzer.entities.RealEstateAgency;
+import com.real.estate.analyzer.enums.RealEstateType;
 import com.real.estate.analyzer.utils.Utils;
 
+@Slf4j
 public class ImotBgConnector implements Connector {
 													
 	private static final String WORKPAGE_URL_LINK = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7ujbrw&f1=1";
@@ -23,7 +25,7 @@ public class ImotBgConnector implements Connector {
 	
 	private static final String CLICK_POPUP_XPATH = "//p [@class='fc-button-label']"; 
 	
-	private static final String TITLE_XPATH = 
+	private static final String ESTATE_TYPE_XPATH =
 			"//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//strong";
 	
 	private static final String PRICE_XPATH = "//span[@id='cena']|//td[@class='valgtop']//span";
@@ -48,81 +50,60 @@ public class ImotBgConnector implements Connector {
 	
 	private static final String AGENCY_CITY_XPATH = " ";
 	
-	private WebDriver driver;
+	private static final WebDriver driver = Utils.setupWebDriver();
 
-	public ImotBgConnector() {
-
-		this.driver = Utils.setupWebDriver();
-	}
-	
 	@Override
 	public Advert extractData(String url)  {
-		
+
 		driver.get(url);
 		
-		String estateType = Utils.getTextByXpath(driver, TITLE_XPATH);
+		RealEstateType estateType = RealEstateType.getTypeFrom(Utils.getTextByXpath(driver, ESTATE_TYPE_XPATH));
 		
 		String fullAddress = Utils.getTextByXpath(driver, FULL_ADDRESS_XPATH);
-		
-		String[] parts;
-		parts = fullAddress.split(COMMA_SEPARATOR);
-		
-		String neighborhood = parts[1].trim();
-		
-		String city = parts[0].substring(5);
-		
-		String priceStr = Utils.getTextByXpath(driver, PRICE_XPATH).replaceAll("\\D+", "");
-		Integer price = Utils.parseInteger(priceStr);
-		
-		String squareFootageStr = Utils.getTextByXpath(driver, SQUARE_FOOTAGE).replaceAll("\\D+", "");
-		Integer squareFootage = Utils.parseInteger(squareFootageStr);
-		
-		String floorStr = Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 2).trim().replaceAll("\\D+", "");
-		Integer floor = Utils.parseInteger(floorStr);
+		String[] addressParts;
+		addressParts = fullAddress.split(COMMA_SEPARATOR);
+
+		City city = new City();
+		city.setName(addressParts[0].substring(5));
+		Neighborhood neighbourhood = new Neighborhood();
+		neighbourhood.setName(addressParts[1].trim());
+		neighbourhood.setCity(city);
+
+		Integer price = Utils.parseInt(Utils.getTextByXpath(driver, PRICE_XPATH));
+		Integer squareFootage = Utils.parseInt(Utils.getTextByXpath(driver, SQUARE_FOOTAGE));
+		Integer floor = Utils.parseInt(Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 2));
 		
 		//TODO cut only broker name
 		//String broker = Utils.getTextByXpath(driver, BROKER_XPATH);
 		
 		//TODO cut only broker telephone
 		//String brokerTel = Utils.getTextByXpath(driver, BROKER_PHONE_XPATH);
+
+		RealEstateAgency agency = new RealEstateAgency();
+		agency.setName(Utils.getTextByXpath(driver, AGENCY_XPATH));
+
+		Advert advert = Advert.builder()
+				.typeEstate(estateType)
+				.squareFootage(squareFootage)
+				.neighbourhood(neighbourhood)
+				.price(price)
+				.floor(floor)
+				.agency(agency)
+				.url(url)
+				.build();
 		
-		String agency = Utils.getTextByXpath(driver, AGENCY_XPATH);
-		
-		LocalDateTime dateTime = LocalDateTime.now();
-	
-		City tempCity = new City(city);
-		
-		RealEstateAgency tempAgency;
-		
-		if (agency != null) {
+		System.out.println(advert);
 			
-			tempAgency = new RealEstateAgency(agency);
-			
-		} else {
-			
-			agency = "Няма агенция";
-			tempAgency = new RealEstateAgency(agency);
-		}
-		RealEstateType tempEstateType = RealEstateType.getTypeFrom(estateType);
-		
-		Neighborhood tempNeighborhood = new Neighborhood(neighborhood, tempCity);
-		
-		Advert tempAdvert = new Advert(tempEstateType, squareFootage,
-				tempNeighborhood, price, floor, tempAgency, url, dateTime);
-		
-		System.out.println(tempAdvert);
-			
-		return tempAdvert;
+		return advert;
 	}
 
 	@Override
-	public HashSet<String> urlSet() {
-		
+	public Set<String> urlSet() {
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		driver.get(WORKPAGE_URL_LINK);
 		driver.findElement(By.xpath(CLICK_POPUP_XPATH)).click();
 		
-		HashSet<String> urlSet = new HashSet<String>();
+		Set<String> urlSet = new HashSet<>();
 		
 		String pagesNumber = Utils.getTextByXpath(driver, "//span[@class='pageNumbersInfo']");
 		int lastPage = Integer.parseInt(pagesNumber.substring(pagesNumber.length() - 3).trim());
@@ -130,15 +111,13 @@ public class ImotBgConnector implements Connector {
 		int page = 1;
 	
 		while (page != lastPage) {
-			
-				int beginTableIndex = 6;
-				int contentCount = 45;
-				
-				for (int j = beginTableIndex; j <= contentCount; j++) {
-		
-					String url = Utils.getLinkXpath(driver, "//table[" + j + "]//a");
-					urlSet.add(url);
-				}
+			int beginTableIndex = 6;
+			int contentCount = 45;
+
+			for (int j = beginTableIndex; j <= contentCount; j++) {
+				String url = Utils.getLinkXpath(driver, "//table[" + j + "]//a");
+				urlSet.add(url);
+			}
 			
 			String nextPage = PAGE_URL + page;
 			driver.get(nextPage);

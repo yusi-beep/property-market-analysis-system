@@ -1,13 +1,8 @@
 package com.real.estate.analyzer.repository;
 
-import java.util.List;
-
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
-import com.real.estate.analyzer.entity.Advert;
-import com.real.estate.analyzer.entity.RealEstateAgency;
+import com.real.estate.analyzer.entities.RealEstateAgency;
 
 public interface AgencyRepository extends CrudRepository<RealEstateAgency, Long>{
 /*

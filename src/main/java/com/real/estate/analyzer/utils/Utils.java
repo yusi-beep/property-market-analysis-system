@@ -11,41 +11,16 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.real.estate.analyzer.entity.City;
-import com.real.estate.analyzer.repository.AdvertRepository;
-import com.real.estate.analyzer.repository.CityRepository;
-
 public class Utils {
-	
-	private static final Logger log = LoggerFactory.getLogger(Utils.class);
-	
-	private static AdvertRepository advertRepository;
-	
-	private static CityRepository cityRepository;
-	
-	public static void sleep(int time)  {
-		
-		try {
-			
-			Thread.sleep(time);
-			
-		} catch (InterruptedException e) {
 
-			e.printStackTrace();
-		}
-	}
-	
-	public static void scroll(WebElement element, WebDriver driver) {
-		
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
-		
-	}
-	
+	private static final Logger log = LoggerFactory.getLogger(Utils.class);
+
+	private Utils() {}
+
 	public static WebDriver setupWebDriver() {
-		
 		System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
 		ChromeOptions options = new ChromeOptions();
-		
+
 		options.addArguments("enable-automation");
 		options.addArguments("--window-size=1920,1080");
 		options.addArguments("--no-sandbox");
@@ -53,132 +28,78 @@ public class Utils {
 		options.addArguments("--dns-prefetch-disable");
 		options.addArguments("--disable-gpu");
 		options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-		
+
 		options.setHeadless(true);
-		
+
 		return new ChromeDriver(options);
+	}
+
+	public static void sleep(int time)  {
+	 	try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void scroll(WebElement element, WebDriver driver) {
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
 	}
 	
 	public static String getTextByXpath(WebDriver driver, String xPath) {
-		 	
 		try {
-			
-			String element = driver.findElement(By.xpath(xPath)).getText();
-				
-			return element;
-			
+			return driver.findElement(By.xpath(xPath)).getText();
 		} catch (NoSuchElementException e) {
-			
-			log.info("Element don't exists with xpath [" + xPath + "]");
-			
+			log.info(String.format("Element with xpath [%s] don't exists", xPath));
 			return "";
-		
 		} catch (NullPointerException e) {
-			
 			return "";
 		}
 	}
 	
 	public static String getLinkXpath(WebDriver driver, String xPath) {
-		
 		try {
-			
-			WebElement element = driver.findElement(By.xpath(xPath));
-		
-			return element.getAttribute("href");
-		
+			return  driver.findElement(By.xpath(xPath)).getAttribute("href");
 		} catch (NoSuchElementException e) {
-			
-			log.info("Element don't exists with xpath [" + xPath + "]");
-			
+			log.info(String.format("Element with xpath [%s] don't exists", xPath));
+			return "";
+		} catch (NullPointerException e) {
 			return "";
 		}
 	}
 	
-	public static Integer parseInteger(String string) {
-		
+	public static Integer parseInt(String value) {
+		String cleanedUpValue = value.replaceAll("\\D+", "").trim();
+
 		try {
-			
-			Integer value = Integer.parseInt(string);
-			
-			return value;
-			
+			return Integer.parseInt(cleanedUpValue);
 		} catch (NumberFormatException e) {
-			
-			log.info("Number format at string: " + string);
-			
-			return null;
-		}
-	}
-	
-	public static Integer parseInt(String string) {
-		
-		try {
-			
-			int intValue = Integer.parseInt(string.substring(0, 3).replaceAll("\\D+", ""));
-			
-			return intValue;
-			
-		} catch (NumberFormatException e) {
-			
-			log.info("Number format at string: " + string);
-			
+			log.info(String.format("%s is not a number", cleanedUpValue));
 			return 0;
-			
 		} catch (StringIndexOutOfBoundsException e) {
-			
-			log.info("String index out of bound:" + string);
-			
+			log.info("String index out of bound:" + cleanedUpValue);
 			return null;
-		
 		} catch (NullPointerException e) {
-			
-			log.info("Null pointer at string: " + string);
-			
-			return 0;
-		}
-	}
-	
-public static Integer parseIntTotal(String string) {
-		
-		try {
-		
-			int intValue = Integer.parseInt(string);
-			
-			return intValue;
-			
-		} catch (NumberFormatException e) {
-			
-			log.info("Number format at string: " + string);
-			
-			return 0;
-		
-		} catch (NullPointerException e) {
-	
-			log.info("Null pointer at string: " + string);
-	
+			log.info("Null pointer at string: " + cleanedUpValue);
 			return 0;
 		}
 	}
 
 	public static String[] split(String splitAt, String string) {
-	
 		String[] parts = new String[2];
 	
 		if (string.contains(",")) {
-	
 			parts = string.split(splitAt);
-	
+
 			return parts;
-	
 		} else {
-	
 			parts[0] = "";
 			parts[1] = "";
-	
+
 			return parts;
 		}
 	}
+
 	/*
 	public static boolean isDuplicate(String address, 
 			String city, Integer floor, Integer squareFootage, String broker) {

@@ -1,4 +1,4 @@
-package com.real.estate.analyzer.entity;
+package com.real.estate.analyzer.enums;
 
 import java.util.NoSuchElementException;
 
