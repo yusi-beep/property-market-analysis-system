@@ -41,6 +41,7 @@ public class Advert {
 
 	@Column(unique = true)
 	private String url;
-	
+
+	@Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
 	private LocalDateTime date;
 }
