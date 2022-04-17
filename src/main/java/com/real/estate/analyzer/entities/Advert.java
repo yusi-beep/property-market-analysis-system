@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class Advert {
 	
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 	@Enumerated(EnumType.STRING)
@@ -29,7 +29,7 @@ public class Advert {
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "neighbourhood")
-	private Neighborhood neighbourhood;
+	private Neighbourhood neighbourhood;
 	
 	private Integer price;
 	

@@ -7,28 +7,23 @@ import com.real.estate.analyzer.entities.Advert;
 
 @Repository
 public interface AdvertRepository extends CrudRepository<Advert, Long> {
-	/*
-	@Query(value = "select * \n" +
-            "from advert \n" +
-            "where neighborhood = :neighborhood \n" +
-            "and floor = :floor \n" +
-            "and square_footage = :squareFootage \n",
-            nativeQuery = true)
-    Advert checkForDuplicates(
-    		@Param("neighborhood") Neighborhood neighborhood,
-    		@Param("floor") Integer floor,
-    		@Param("squareFootage") Integer squareFootage);
-	
-	@Query(value = "select MIN(price)\n" +
-					"from advert")
-	Advert getMinPrice();
-	
-	@Query(value = "select MAX(price)\n" +
-			"from advert")
-	Advert getMaxPrice();
-	
-	@Query(value = "select AVG(price)\n" +
-			"from advert")
-	Advert getAvgPrice();
-	*/
-}
+
+	//TODO min max avg - add  new param for city, naighbourhood and agency
+	/*	@Query(value = "select MIN(ad.price)\n" +
+				"from advert ad\n" +
+				"join neighbourhood n on n.ID = ad.neighbourhood\n" +
+				"where n.name = :name\n")
+		Integer minPriceForNeighbourhood(@Param("name") String name);
+		
+		@Query(value = "select MAX(ad.price)\n" +
+				"from advert ad\n" +
+				"join neighbourhood n on n.ID = ad.neighbourhood\n" +
+				"where n.name = :name\n")
+		Integer maxPriceForNeighbourhood(@Param("name") String name);
+		
+		@Query(value = "select AVG(ad.price)\n" +
+				"from advert ad\n" +
+				"join neighbourhood n on n.ID = ad.neighbourhood\n" +
+				"where n.name = :name\n")
+		Double avgPriceForNeighbourhood(@Param("name") String name);	
+*/}

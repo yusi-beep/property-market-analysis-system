@@ -23,7 +23,8 @@ public enum RealEstateType {
     PARCEL(new String[] {"Парцел"}),
     ZEMEDELSKA_ZEMQ(new String[] {"Земеделска земя"}),
     BIZNES_IMOT(new String[] {"Бизнес имот"}),
-    PROM_POMESHTENIE(new String[] {"Пром. помещение"});
+    PROM_POMESHTENIE(new String[] {"Пром. помещение"}),
+    DRUGI(new String[] {"", "Други"});
 
     String[] estateTypes;
 

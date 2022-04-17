@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public class Utils {
 
 	private static final Logger log = LoggerFactory.getLogger(Utils.class);
-
+	
 	private Utils() {}
 
 	public static WebDriver setupWebDriver() {
@@ -29,7 +29,7 @@ public class Utils {
 		options.addArguments("--disable-gpu");
 		options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 
-		options.setHeadless(true);
+		options.setHeadless(false);
 
 		return new ChromeDriver(options);
 	}
@@ -100,6 +100,14 @@ public class Utils {
 		}
 	}
 
+	public static String  isExists(String string) {
+		
+		if (string != null) {
+			return string;
+		}
+		
+		return "Няма информация";
+	}
 	/*
 	public static boolean isDuplicate(String address, 
 			String city, Integer floor, Integer squareFootage, String broker) {

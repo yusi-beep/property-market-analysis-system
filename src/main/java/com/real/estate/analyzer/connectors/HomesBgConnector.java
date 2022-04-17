@@ -7,12 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.real.estate.analyzer.entities.Advert;
 import com.real.estate.analyzer.entities.City;
-import com.real.estate.analyzer.entities.Neighborhood;
+import com.real.estate.analyzer.entities.Neighbourhood;
 import com.real.estate.analyzer.entities.RealEstateAgency;
 import com.real.estate.analyzer.enums.RealEstateType;
+import com.real.estate.analyzer.repository.AgencyRepository;
+import com.real.estate.analyzer.repository.CityRepository;
+import com.real.estate.analyzer.repository.NeighbourhoodRepository;
 import com.real.estate.analyzer.utils.Utils;
 
 @Slf4j
@@ -36,19 +40,23 @@ public class HomesBgConnector implements Connector {
 
     private static final String AGENCY_XPATH = "//div[@class='contact-box']//div[1]/b";
 
-//	private static final String BROKER_XPATH = "//text()[contains(.,'брокер')]//preceding-sibling::span";
-
-//	private static final String BROKER_PHONE_XPATH = "//text()[contains(.,'брокер')]//following::a";
-
-    //TODO extract extra agency info
-    private static final String AGENCY_ADDRESS_XPATH = " ";
-
-    private static final String AGENCY_TEL_XPATH = " ";
-
-    private static final String AGENCY_CITY_XPATH = " ";
+    //TODO extract extra agency info addres, tel, city
 
     private static final WebDriver driver = Utils.setupWebDriver();
 
+    private AgencyRepository agencyRepository;
+  
+    private NeighbourhoodRepository neighbourhoodRepository;
+   
+    private CityRepository cityRepository;
+    
+    public HomesBgConnector(AgencyRepository agencyRepository,
+    		NeighbourhoodRepository neighbourhoodRepository, CityRepository cityRepository) {
+    	this.agencyRepository = agencyRepository;
+    	this.cityRepository = cityRepository;
+    	this.neighbourhoodRepository = neighbourhoodRepository;
+    }
+    
     @Override
     public Advert extractData(String url) {
         driver.get(url);
@@ -59,25 +67,39 @@ public class HomesBgConnector implements Connector {
         RealEstateType estateType = RealEstateType.getTypeFrom(parts[0].trim());
         Integer squareFootage = Utils.parseInt(parts[1]);
         Integer price = Utils.parseInt(Utils.getTextByXpath(driver, PRICE_XPATH));
-        Integer floor = Utils.parseInt(Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 3));
+        Integer floor = Utils.parseInt(Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 3)); //TODO
 
         String fullAddress = Utils.getTextByXpath(driver, FULL_ADDRESS_XPATH);
         parts = Utils.split(COMMA_SEPARATOR, fullAddress);
 
+        String cityName = parts[1].trim();
         City city = new City();
-        city.setName(parts[1].trim());
+        CityRepository cityRepo = cityRepository.getCityByName(cityName);
+        if (cityRepo == null) {
+        	city.setName(cityName);
+        } else {
+        	city.setId(city.getId());
+        }
+        
+        String neighbourhoodName = parts[0].trim();
+        Neighbourhood neighbourhood = new Neighbourhood();
+        NeighbourhoodRepository neighbourhoodRepo = neighbourhoodRepository.getNeighbourhoodByName(neighbourhoodName);
+        if (neighbourhoodRepo == null) {
+        	neighbourhood.setName(neighbourhoodName);
+            neighbourhood.setCity(city);
+        } else {
+        	neighbourhood.setId(neighbourhood.getId());
+        }
 
-        Neighborhood neighbourhood = new Neighborhood();
-        neighbourhood.setName(parts[0].trim());
-        neighbourhood.setCity(city);
-
-        //String broker = Utils.getTextByXpath(driver, BROKER_XPATH);
-
-        //String brokerTel = Utils.getTextByXpath(driver, BROKER_PHONE_XPATH);
-
+        String agencyName = Utils.getTextByXpath(driver, AGENCY_XPATH);
         RealEstateAgency agency = new RealEstateAgency();
-        agency.setName(Utils.getTextByXpath(driver, AGENCY_XPATH));
-
+        AgencyRepository agencyRepo = agencyRepository.getRealEstateAgencyByName(agencyName);
+        if (agencyRepo == null) {
+        	agency.setName(agencyName);
+        } else {
+        	agency.setId(agency.getId());
+        }
+        
         Advert advert = Advert.builder()
                 .typeEstate(estateType)
                 .squareFootage(squareFootage)
