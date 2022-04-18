@@ -27,7 +27,7 @@ public class Advert {
 
 	private Integer squareFootage;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "neighbourhood")
 	private Neighbourhood neighbourhood;
 	
@@ -35,7 +35,7 @@ public class Advert {
 	
 	private Integer floor;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "agency")
 	private RealEstateAgency agency;
 

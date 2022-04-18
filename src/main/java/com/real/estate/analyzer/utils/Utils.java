@@ -77,10 +77,10 @@ public class Utils {
 			log.info(String.format("%s is not a number", cleanedUpValue));
 			return 0;
 		} catch (StringIndexOutOfBoundsException e) {
-			log.info("String index out of bound:" + cleanedUpValue);
-			return null;
+			log.info(String.format("String index out of bound: %s", cleanedUpValue));
+			return 0;
 		} catch (NullPointerException e) {
-			log.info("Null pointer at string: " + cleanedUpValue);
+			log.info(String.format("Null pointer at string: %s", cleanedUpValue));
 			return 0;
 		}
 	}

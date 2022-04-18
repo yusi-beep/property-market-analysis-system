@@ -1,6 +1,5 @@
 package com.real.estate.analyzer.connectors;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.real.estate.analyzer.entities.Advert;
 import com.real.estate.analyzer.entities.City;
@@ -20,6 +21,7 @@ import com.real.estate.analyzer.repository.NeighbourhoodRepository;
 import com.real.estate.analyzer.utils.Utils;
 
 @Slf4j
+@Component
 public class HomesBgConnector implements Connector {
 
     private static final String WORKPAGE_URL_LINK = "https://www.homes.bg/?currencyId=1&filterOrderBy=0&locationId=0&typeId=ApartmentSell";
@@ -44,19 +46,15 @@ public class HomesBgConnector implements Connector {
 
     private static final WebDriver driver = Utils.setupWebDriver();
 
+    @Autowired
     private AgencyRepository agencyRepository;
-  
+
+    @Autowired
     private NeighbourhoodRepository neighbourhoodRepository;
-   
+
+    @Autowired
     private CityRepository cityRepository;
-    
-    public HomesBgConnector(AgencyRepository agencyRepository,
-    		NeighbourhoodRepository neighbourhoodRepository, CityRepository cityRepository) {
-    	this.agencyRepository = agencyRepository;
-    	this.cityRepository = cityRepository;
-    	this.neighbourhoodRepository = neighbourhoodRepository;
-    }
-    
+
     @Override
     public Advert extractData(String url) {
         driver.get(url);
@@ -78,6 +76,7 @@ public class HomesBgConnector implements Connector {
         if (city == null) {
           city = new City();
           city.setName(cityName);
+          city = cityRepository.save(city);
         }
         
         String neighbourhoodName = parts[0].trim();
@@ -87,6 +86,7 @@ public class HomesBgConnector implements Connector {
         	neighbourhood = new Neighbourhood();
         	neighbourhood.setName(neighbourhoodName);
             neighbourhood.setCity(city);
+            neighbourhood = neighbourhoodRepository.save(neighbourhood);
         }
         
         String agencyName = Utils.getTextByXpath(driver, AGENCY_XPATH);
@@ -95,6 +95,7 @@ public class HomesBgConnector implements Connector {
         if (agency == null) {
         	agency = new RealEstateAgency();
         	agency.setName(agencyName);
+            agency = agencyRepository.save(agency);
         } 
         
         Advert advert = Advert.builder()

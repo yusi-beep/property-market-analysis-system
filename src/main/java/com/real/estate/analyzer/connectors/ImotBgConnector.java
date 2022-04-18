@@ -3,6 +3,9 @@ package com.real.estate.analyzer.connectors;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -17,6 +20,7 @@ import com.real.estate.analyzer.repository.NeighbourhoodRepository;
 import com.real.estate.analyzer.utils.Utils;
 
 @Slf4j
+@Component
 public class ImotBgConnector implements Connector {
 													
 	private static final String WORKPAGE_URL_LINK = "https://www.imot.bg/pcgi/imot.cgi";
@@ -45,19 +49,15 @@ public class ImotBgConnector implements Connector {
 	
 	private static final WebDriver driver = Utils.setupWebDriver();
 
+	@Autowired
 	private AgencyRepository agencyRepository;
-	  
+
+	@Autowired
     private NeighbourhoodRepository neighbourhoodRepository;
-   
+
+	@Autowired
     private CityRepository cityRepository;
-    
-    public ImotBgConnector(AgencyRepository agencyRepository,
-    		NeighbourhoodRepository neighbourhoodRepository, CityRepository cityRepository) {
-    	this.agencyRepository = agencyRepository;
-    	this.cityRepository = cityRepository;
-    	this.neighbourhoodRepository = neighbourhoodRepository;
-    }
-    
+
 	@Override
 	public Advert extractData(String url)  {
 
@@ -80,6 +80,7 @@ public class ImotBgConnector implements Connector {
         if (city == null) {
           city = new City();
           city.setName(cityName);
+		  city = cityRepository.save(city);
         }
         
         String neighbourhoodName = neighborhoodParts[1].trim();
@@ -89,6 +90,7 @@ public class ImotBgConnector implements Connector {
         	neighbourhood = new Neighbourhood();
         	neighbourhood.setName(neighbourhoodName);
             neighbourhood.setCity(city);
+			neighbourhood = neighbourhoodRepository.save(neighbourhood);
         }
         
         String agencyName = Utils.getTextByXpath(driver, AGENCY_XPATH);
@@ -97,6 +99,7 @@ public class ImotBgConnector implements Connector {
         if (agency == null) {
         	agency = new RealEstateAgency();
         	agency.setName(agencyName);
+			agency = agencyRepository.save(agency);
         } 
         
 		Advert advert = Advert.builder()
