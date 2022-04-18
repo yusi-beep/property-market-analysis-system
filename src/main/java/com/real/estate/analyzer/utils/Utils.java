@@ -29,7 +29,7 @@ public class Utils {
 		options.addArguments("--disable-gpu");
 		options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 
-		options.setHeadless(false);
+		options.setHeadless(true);
 
 		return new ChromeDriver(options);
 	}

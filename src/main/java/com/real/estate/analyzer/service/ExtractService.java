@@ -41,8 +41,8 @@ public class ExtractService implements CommandLineRunner {
     public void run(String... args) {
 
     	List<Connector> listConectors = new ArrayList<Connector>();
-    	listConectors.add(new HomesBgConnector(agencyRepository, neighbourhoodRepository, cityRepository));
     	listConectors.add(new ImotBgConnector(agencyRepository, neighbourhoodRepository, cityRepository));
+    	listConectors.add(new HomesBgConnector(agencyRepository, neighbourhoodRepository, cityRepository));
     	
     	for (Connector connector : listConectors) {
     		extractAdvertsFrom(connector);

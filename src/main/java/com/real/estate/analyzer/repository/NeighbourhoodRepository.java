@@ -8,5 +8,5 @@ import com.real.estate.analyzer.entities.Neighbourhood;
 @Repository
 public interface NeighbourhoodRepository extends CrudRepository<Neighbourhood, Long>{
 	
-	NeighbourhoodRepository getNeighbourhoodByName(String name);
+	Neighbourhood getNeighbourhoodByName(String name);
 }

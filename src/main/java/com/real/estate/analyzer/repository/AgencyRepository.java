@@ -8,5 +8,5 @@ import com.real.estate.analyzer.entities.RealEstateAgency;
 @Repository
 public interface AgencyRepository extends CrudRepository<RealEstateAgency, Long> {
 
-	AgencyRepository getRealEstateAgencyByName(String name);
+	RealEstateAgency getRealEstateAgencyByName(String name);
 }

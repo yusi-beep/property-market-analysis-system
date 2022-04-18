@@ -1,5 +1,6 @@
 package com.real.estate.analyzer.connectors;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.real.estate.analyzer.entities.Advert;
 import com.real.estate.analyzer.entities.City;
@@ -73,32 +73,29 @@ public class HomesBgConnector implements Connector {
         parts = Utils.split(COMMA_SEPARATOR, fullAddress);
 
         String cityName = parts[1].trim();
-        City city = new City();
-        CityRepository cityRepo = cityRepository.getCityByName(cityName);
-        if (cityRepo == null) {
-        	city.setName(cityName);
-        } else {
-        	city.setId(city.getId());
+        City city = cityRepository.getCityByName(cityName);
+
+        if (city == null) {
+          city = new City();
+          city.setName(cityName);
         }
         
         String neighbourhoodName = parts[0].trim();
-        Neighbourhood neighbourhood = new Neighbourhood();
-        NeighbourhoodRepository neighbourhoodRepo = neighbourhoodRepository.getNeighbourhoodByName(neighbourhoodName);
-        if (neighbourhoodRepo == null) {
+        Neighbourhood neighbourhood = neighbourhoodRepository.getNeighbourhoodByName(neighbourhoodName);
+        
+        if (neighbourhood == null) {
+        	neighbourhood = new Neighbourhood();
         	neighbourhood.setName(neighbourhoodName);
             neighbourhood.setCity(city);
-        } else {
-        	neighbourhood.setId(neighbourhood.getId());
         }
-
+        
         String agencyName = Utils.getTextByXpath(driver, AGENCY_XPATH);
-        RealEstateAgency agency = new RealEstateAgency();
-        AgencyRepository agencyRepo = agencyRepository.getRealEstateAgencyByName(agencyName);
-        if (agencyRepo == null) {
+        RealEstateAgency agency = agencyRepository.getRealEstateAgencyByName(agencyName);
+        
+        if (agency == null) {
+        	agency = new RealEstateAgency();
         	agency.setName(agencyName);
-        } else {
-        	agency.setId(agency.getId());
-        }
+        } 
         
         Advert advert = Advert.builder()
                 .typeEstate(estateType)

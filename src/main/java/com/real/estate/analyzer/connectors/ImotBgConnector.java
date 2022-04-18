@@ -2,7 +2,6 @@ package com.real.estate.analyzer.connectors;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -22,7 +21,7 @@ public class ImotBgConnector implements Connector {
 													
 	private static final String WORKPAGE_URL_LINK = "https://www.imot.bg/pcgi/imot.cgi";
 	
-	private static final String PAGE_URL = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7wtosj&f1=";
+	//private static final String PAGE_URL = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7wtosj&f1=";
 	
 	private static final String COMMA_SEPARATOR = ",";
 	
@@ -74,32 +73,31 @@ public class ImotBgConnector implements Connector {
 		Integer squareFootage = Utils.parseInt(Utils.getTextByXpath(driver, SQUARE_FOOTAGE));
 		Integer floor = Utils.parseInt(Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 2));
 
-		String cityName = neighborhoodParts[0].substring(5);
-		City city = new City();
-        CityRepository cityRepo = cityRepository.getCityByName(cityName);
-        if (cityRepo == null) {
-        	city.setName(cityName);
-        } else {
-        	city.setId(city.getId());
+		String cityName = neighborhoodParts[0];
+		cityName = cityName.substring(cityName.indexOf(' '), cityName.length()).trim();
+        City city = cityRepository.getCityByName(cityName);
+
+        if (city == null) {
+          city = new City();
+          city.setName(cityName);
         }
+        
         String neighbourhoodName = neighborhoodParts[1].trim();
-        Neighbourhood neighbourhood = new Neighbourhood();
-        NeighbourhoodRepository neighbourhoodRepo = neighbourhoodRepository.getNeighbourhoodByName(neighbourhoodName);
-        if (neighbourhoodRepo == null) {
+        Neighbourhood neighbourhood = neighbourhoodRepository.getNeighbourhoodByName(neighbourhoodName);
+        
+        if (neighbourhood == null) {
+        	neighbourhood = new Neighbourhood();
         	neighbourhood.setName(neighbourhoodName);
             neighbourhood.setCity(city);
-        } else {
-        	neighbourhood.setId(neighbourhood.getId());
         }
         
         String agencyName = Utils.getTextByXpath(driver, AGENCY_XPATH);
-        RealEstateAgency agency = new RealEstateAgency();
-        agency.setName(agencyName);
-        AgencyRepository agencyRepo = agencyRepository.getRealEstateAgencyByName(agencyName);
-        if (agencyRepo != null) {
-        	 agencyRepo = agencyRepository.getRealEstateAgencyByName(agencyName);
-        	agency.setId(agency.getId());
-        }
+        RealEstateAgency agency = agencyRepository.getRealEstateAgencyByName(agencyName);
+        
+        if (agency == null) {
+        	agency = new RealEstateAgency();
+        	agency.setName(agencyName);
+        } 
         
 		Advert advert = Advert.builder()
 				.typeEstate(estateType)
@@ -118,7 +116,7 @@ public class ImotBgConnector implements Connector {
 
 	@Override
 	public Set<String> urlSet() {
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts();
 		driver.get(WORKPAGE_URL_LINK);
 		driver.findElement(By.xpath(CLICK_POPUP_XPATH)).click();
 		driver.findElement(By.xpath("//a[@class='mapBtnProdajbi']")).click();

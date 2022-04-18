@@ -8,5 +8,5 @@ import com.real.estate.analyzer.entities.City;
 @Repository
 public interface CityRepository extends CrudRepository<City, Long> {
 	
-	CityRepository getCityByName(String name);
+	City getCityByName(String name);
 }
