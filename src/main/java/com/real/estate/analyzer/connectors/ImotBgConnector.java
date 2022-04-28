@@ -1,14 +1,14 @@
 package com.real.estate.analyzer.connectors;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import com.real.estate.analyzer.entities.Advert;
 import com.real.estate.analyzer.entities.City;
 import com.real.estate.analyzer.entities.Neighbourhood;
@@ -19,17 +19,23 @@ import com.real.estate.analyzer.repository.CityRepository;
 import com.real.estate.analyzer.repository.NeighbourhoodRepository;
 import com.real.estate.analyzer.utils.Utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Component
 public class ImotBgConnector implements Connector {
 													
 	private static final String WORKPAGE_URL_LINK = "https://www.imot.bg/pcgi/imot.cgi";
+
+	private static final String CLICK_POPUP_XPATH = "//p [@class='fc-button-label']"; 
 	
-	//private static final String PAGE_URL = "https://www.imot.bg/pcgi/imot.cgi?act=3&slink=7wtosj&f1=";
+	private static final String CLICK_CITY_FILTER_XPATH = "//*[@id=\"city_1\"]"; //Shumen
+	
+	private static final String CLICK_SALES_XPATH = "//a[@class='mapBtnProdajbi']";
+	
+	private static final String CLICK_SEARCH_XPATH = "//input[@value='Т Ъ Р С И']";
 	
 	private static final String COMMA_SEPARATOR = ",";
-	
-	private static final String CLICK_POPUP_XPATH = "//p [@class='fc-button-label']"; 
 	
 	private static final String ESTATE_TYPE_XPATH =
 			"//div[@style='width:300px; display:inline-block; float:left; margin-top:15px;']//strong";
@@ -102,6 +108,8 @@ public class ImotBgConnector implements Connector {
 			agency = agencyRepository.save(agency);
         } 
         
+        LocalDateTime dateTime = LocalDateTime.now();
+        
 		Advert advert = Advert.builder()
 				.typeEstate(estateType)
 				.squareFootage(squareFootage)
@@ -110,6 +118,7 @@ public class ImotBgConnector implements Connector {
 				.floor(floor)
 				.agency(agency)
 				.url(url)
+				.date(dateTime)
 				.build();
 		
 		System.out.println(advert);
@@ -122,8 +131,9 @@ public class ImotBgConnector implements Connector {
 		driver.manage().timeouts();
 		driver.get(WORKPAGE_URL_LINK);
 		driver.findElement(By.xpath(CLICK_POPUP_XPATH)).click();
-		driver.findElement(By.xpath("//a[@class='mapBtnProdajbi']")).click();
-		driver.findElement(By.xpath("//input[@value='Т Ъ Р С И']")).click();
+		driver.findElement(By.xpath(CLICK_CITY_FILTER_XPATH)).click();
+		driver.findElement(By.xpath(CLICK_SALES_XPATH)).click();
+		driver.findElement(By.xpath(CLICK_SEARCH_XPATH)).click();
 		
 		String pageUrl = driver.getCurrentUrl();
 		pageUrl = pageUrl.substring(0, pageUrl.length() - 1);

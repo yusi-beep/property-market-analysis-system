@@ -10,6 +10,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.real.estate.analyzer.entities.Neighbourhood;
+import com.real.estate.analyzer.repository.AdvertRepository;
 
 public class Utils {
 
@@ -84,7 +88,21 @@ public class Utils {
 			return 0;
 		}
 	}
+	  //Integer floor = Utils.parseInt(Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 3)); 
 
+	public static Integer parseFloorInteger(WebDriver driver, String xPath) {
+		String cleanedUpValue = getTextByXpath(driver, xPath);
+		
+		try {	 
+			Integer valueInteger = parseInt(cleanedUpValue.substring(0, 3));
+		
+			return valueInteger;
+		} catch (StringIndexOutOfBoundsException e ) {
+			log.info(String.format("String index out of bound: %s", cleanedUpValue));
+			return 0;
+		}
+	}
+	
 	public static String[] split(String splitAt, String string) {
 		String[] parts = new String[2];
 	
@@ -108,23 +126,4 @@ public class Utils {
 		
 		return "Няма информация";
 	}
-	/*
-	public static boolean isDuplicate(String address, 
-			String city, Integer floor, Integer squareFootage, String broker) {
-		
-		try {
-			
-			boolean isDuplicates = advertRepository.checkForDuplicates(
-					address, city, floor, squareFootage, broker) == null;
-			 
-			 return isDuplicates;
-			 
-		} catch (org.springframework.dao.IncorrectResultSizeDataAccessException e ) {
-			return false;
-			
-		} catch (NullPointerException e) {
-			return true;
-		}
-	}
-	*/
 }

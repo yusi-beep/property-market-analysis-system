@@ -1,5 +1,6 @@
 package com.real.estate.analyzer.connectors;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,7 +66,7 @@ public class HomesBgConnector implements Connector {
         RealEstateType estateType = RealEstateType.getTypeFrom(parts[0].trim());
         Integer squareFootage = Utils.parseInt(parts[1]);
         Integer price = Utils.parseInt(Utils.getTextByXpath(driver, PRICE_XPATH));
-        Integer floor = Utils.parseInt(Utils.getTextByXpath(driver, FLOOR_XPATH).substring(0, 3)); //TODO
+        Integer floor = Utils.parseFloorInteger(driver, FLOOR_XPATH); //TODO
 
         String fullAddress = Utils.getTextByXpath(driver, FULL_ADDRESS_XPATH);
         parts = Utils.split(COMMA_SEPARATOR, fullAddress);
@@ -98,6 +99,8 @@ public class HomesBgConnector implements Connector {
             agency = agencyRepository.save(agency);
         } 
         
+        LocalDateTime dateTime = LocalDateTime.now();
+        
         Advert advert = Advert.builder()
                 .typeEstate(estateType)
                 .squareFootage(squareFootage)
@@ -106,6 +109,7 @@ public class HomesBgConnector implements Connector {
                 .floor(floor)
                 .agency(agency)
                 .url(url)
+                .date(dateTime)
                 .build();
 
         System.out.println(advert);
