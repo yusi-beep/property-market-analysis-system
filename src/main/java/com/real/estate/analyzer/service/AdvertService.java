@@ -3,7 +3,9 @@ package com.real.estate.analyzer.service;
 import java.math.BigDecimal;
 
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface AdvertService {
 	
 	public BigDecimal minPriceForNeighbourhood(String name);

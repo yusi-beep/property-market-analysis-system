@@ -2,8 +2,6 @@ package com.real.estate.analyzer.service;
 
 import java.math.BigDecimal;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
@@ -49,7 +47,7 @@ public class AdvertServiceImpl implements AdvertService/*, CommandLineRunner*/{
 		public BigDecimal avgPriceForAgnecy(String name) {
 			return advertRepository.avgPriceForAgnecy(name);
 		}
-/*
+/*		
 		@Override
 		public void run(String... args) throws Exception {
 			
@@ -62,6 +60,8 @@ public class AdvertServiceImpl implements AdvertService/*, CommandLineRunner*/{
 			System.out.println("The biggest price for ДОМ: " + advertService.maxPriceForAgnecy("ДОМ"));
 			System.out.println("The smallest price for ДОМ: " + advertService.minPriceForAgnecy("ДОМ"));
 			System.out.println("The smallest price for ДОМ: " + advertService.avgPriceForAgnecy("ДОМ"));
+			
+			
 		}
 */
 }
