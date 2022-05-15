@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.real.estate.analyzer.entities.Advert;
-import com.real.estate.analyzer.entities.Neighbourhood;
 
 @Repository
 public interface AdvertRepository extends CrudRepository<Advert, Long> {
