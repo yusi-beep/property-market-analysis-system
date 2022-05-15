@@ -4,17 +4,41 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet"
-  		th:ref="@{/css/style.css}" />
+  		th:ref="@{/static/css/style.css}" />
   <title>Home Page</title>
 </head>
 
 <body>
 
-	<p th:text="'Time on the server is ' + ${neighbourhood}" class="text" />
+	<div class="background" >
 	
-	<p th:text="'Time on the server is ' + ${city}" class="text" />
+		<form th:action = "@{/1}">	
+		    <select th:name="cityOptions">
+		     	<option value="0">Select</option>
+		 		<option th:each="option : ${cityOptions}" th:value="${option}" th:text="${option}"></option>
+		    </select>
+		    
+		    <input type="text" th:name=neighbourhoodIn/>
+		    
+		    <button type="submit" >Search</button>
+		</form>
+		<br>
+		
+		<form th:action = "@{/2}" th:name=agencyIn>	
+		   
+		    <input type="text" th:name=agencyIn/>
+		    
+		    <button type="submit" >Search</button>
+		</form>
+		
+		<p th:text="'Minimum price in selected neighbourhood is ' + ${neighbourhood}" class="text" />
+	  
+		<p th:text="'Minimum price in selected city is ' + ${city}" class="text" />
+		
+		<p th:text="'Minimum price in selected agency is ' + ${agency}" class="text" />
 	
-	<p th:text="'Time on the server is ' + ${agency}" class="text" />
+	</div>
+	
 </body>
 
 </html>
