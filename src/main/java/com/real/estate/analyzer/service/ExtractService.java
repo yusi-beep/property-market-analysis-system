@@ -40,11 +40,11 @@ public class ExtractService /* implements CommandLineRunner */{
 //      }
     }
 */
-    private void getAnalyzedData(String name) {
-    	
-    	System.out.println(advertService.maxPriceForNeighbourhood(name));
-    	
-    }
+//    private void getAnalyzedData(String name) {
+//
+//    	System.out.println(advertService.maxPriceForNeighbourhood(name));
+//
+//    }
     
     private void extractAdvertsFrom(Connector connector) {
         Set<String> urlLinks = connector.urlSet();

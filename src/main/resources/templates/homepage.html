@@ -13,13 +13,11 @@
 	<div class="background" >
 	
 		<form th:action = "@{/1}">	
-		    <select th:name="cityOptions">
+		    <select th:name="neighbourhoodIn">
 		     	<option value="0">Select</option>
-		 		<option th:each="option : ${cityOptions}" th:value="${option}" th:text="${option}"></option>
+		 		<option th:each="option : ${neighbourhoodOptions}" th:value="${option.id}" th:text="${option.city.name} + ', ' + ${option.name}"></option>
 		    </select>
-		    
-		    <input type="text" th:name=neighbourhoodIn/>
-		    
+
 		    <button type="submit" >Search</button>
 		</form>
 		<br>
@@ -36,7 +34,9 @@
 		<p th:text="'Minimum price in selected city is ' + ${city}" class="text" />
 		
 		<p th:text="'Minimum price in selected agency is ' + ${agency}" class="text" />
-	
+
+		<p th:text="${minPrice} + ' :: ' + ${avgPrice} + ' :: ' + ${maxPrice}"/>
+
 	</div>
 	
 </body>
