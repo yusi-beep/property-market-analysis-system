@@ -25,15 +25,15 @@ public class AdvertService {
 			return advertRepository.avgPriceForNeighbourhood(id);
 		}
 		
-		public BigDecimal minPriceForAgnecy(String name) {
-			return advertRepository.minPriceForAgnecy(name);
+		public BigDecimal minPriceForAgnecy(Long id) {
+			return advertRepository.minPriceForAgnecy(id);
 		}
 		
-		public BigDecimal maxPriceForAgnecy(String name) {
-			return advertRepository.maxPriceForAgnecy(name);
+		public BigDecimal maxPriceForAgnecy(Long id) {
+			return advertRepository.maxPriceForAgnecy(id);
 		}
 
-		public BigDecimal avgPriceForAgnecy(String name) {
-			return advertRepository.avgPriceForAgnecy(name);
+		public BigDecimal avgPriceForAgnecy(Long id) {
+			return advertRepository.avgPriceForAgnecy(id);
 		}
 }

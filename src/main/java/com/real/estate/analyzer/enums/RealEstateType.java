@@ -8,19 +8,19 @@ public enum RealEstateType {
     DVUSTAEN(new String[] {"Двустаен", "2-СТАЕН"}),
     TRISTAEN(new String[] {"Тристаен", "3-СТАЕН"}),
     CHETIRISTAEN(new String[] {"Четиристаен", "4-СТАЕН"}),
-    MNOGOSTAEN(new String[] {"Многостаен", "МНОГОСТАЕН"}),				//caps
+    MNOGOSTAEN(new String[] {"Многостаен", "МНОГОСТАЕН"}),				
     MEZONET(new String[] {"Мезонет"}),
     GARAJ(new String[] {"Гараж"}),
-    OFIS(new String[] {"Офис", "ОФИС"}),								//caps
+    OFIS(new String[] {"Офис", "ОФИС"}),								
     ATELIE_TAVAN(new String[] {"Ателие", "Таван", "Таванска"}),
-    MAGAZIN(new String[] {"Магазин","МАГАЗИН"}),						//caps
+    MAGAZIN(new String[] {"Магазин","МАГАЗИН"}),						
     ZAVEDENIE(new String[] {"Заведение"}),
     SKLAD(new String[] {"Склад"}),
     HOTEL(new String[] {"Хотел"}),
     ETAJ_OT_KUSHTA(new String[] {"Етаж от къща", "ЕТАЖ ОТ КЪЩА"}),
-    KUSHTA(new String[] {"Къща", "КЪЩА"}),								//caps
+    KUSHTA(new String[] {"Къща", "КЪЩА"}),								
     VILA(new String[] {"Вила"}),
-    PARCEL(new String[] {"Парцел","ПАРЦЕЛ"}),							//caps
+    PARCEL(new String[] {"Парцел","ПАРЦЕЛ"}),							
     ZEMEDELSKA_ZEMQ(new String[] {"Земеделска земя"}),
     BIZNES_IMOT(new String[] {"Бизнес имот"}),
     PROM_POMESHTENIE(new String[] {"Пром. помещение"}),

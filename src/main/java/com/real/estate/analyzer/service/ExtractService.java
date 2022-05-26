@@ -16,7 +16,7 @@ import com.real.estate.analyzer.utils.Utils;
 
 @Slf4j
 @Service
-public class ExtractService /* implements CommandLineRunner */{
+public class ExtractService  /*implements CommandLineRunner */{
 
     private static final int TIMEOUT = 2000;
 
@@ -25,26 +25,17 @@ public class ExtractService /* implements CommandLineRunner */{
     
     @Autowired
     private ApplicationContext context;
-
-    private AdvertService advertService;
-    
-/*    @Override
+ /*   
+    @Override
     public void run(String... args) {
 
-        Map<String, Connector> listConectors = context.getBeansOfType(Connector.class);
-        
-        getAnalyzedData("жк. Дружба");
-        
-//      for (Connector connector : listConectors.values()) {
-//         extractAdvertsFrom(connector);
-//      }
+      Map<String, Connector> listConectors = context.getBeansOfType(Connector.class);
+
+      for (Connector connector : listConectors.values()) {
+    	  extractAdvertsFrom(connector);
+      }
     }
 */
-//    private void getAnalyzedData(String name) {
-//
-//    	System.out.println(advertService.maxPriceForNeighbourhood(name));
-//
-//    }
     
     private void extractAdvertsFrom(Connector connector) {
         Set<String> urlLinks = connector.urlSet();
