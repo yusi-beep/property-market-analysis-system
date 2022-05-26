@@ -35,7 +35,7 @@ public class Advert {
 	
 	private Integer floor;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "agency")
 	private RealEstateAgency agency;
 
